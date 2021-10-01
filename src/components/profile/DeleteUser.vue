@@ -7,7 +7,7 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-		  class="ma-2"
+
 	      tile
 	      x-large  
           dark
@@ -15,7 +15,7 @@
           v-bind="attrs"
           v-on="on"
         >
-          Open Dialog
+          Удалить свой аккаунт
         </v-btn>
       </template>
       <v-card>

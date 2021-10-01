@@ -18,31 +18,38 @@
   <v-row
       class="mb-6"
       >
+	  
   <v-col cols="12">
   <ChangeUser/>
   </v-col>
+
   <v-col cols="12">
   <MyPhotos/>
   </v-col>
+
   <v-col cols="12">
   <ChangePassword/>
   </v-col>
+
   <v-col cols="12">
   <ShowInSearch/>
   </v-col>
+
   <v-col cols="12">
   <IpHistory/>
   </v-col>
+
   <v-col cols="12">
   <Settings/>
   </v-col>
+
   <v-col cols="12">
   <QuitThisDevice/>
   </v-col>
+
   <v-col cols="12">
   <DeleteUser/>
   </v-col>
-
   </v-row>
   </v-card>
 </template>

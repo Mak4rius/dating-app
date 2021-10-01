@@ -15,7 +15,7 @@
           v-bind="attrs"
           v-on="on"
         >
-          Open Dialog
+		Изменить пароль
         </v-btn>
       </template>
       <v-card>

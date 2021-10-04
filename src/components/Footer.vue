@@ -4,6 +4,7 @@
 	dark
 	app
 	absolute
+	inset
   >
 	<v-row no-gutters>
       <v-col

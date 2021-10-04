@@ -1,5 +1,5 @@
 <template>
-  <v-card   color="indigo" >
+  <v-card outlined dark tile color="indigo" >
     <v-card-title class="text-center justify-center py-6">
       <h1 class="font-weight-bold text-h3 white--text">
         Yes(Court)

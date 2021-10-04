@@ -1,14 +1,15 @@
 <template>
-  <v-form>
+  <v-form >
   <v-container>
   <v-row>
 	<v-chip
-      class="mt-8"
-      color="cyan"
-      label
+      class="mt-8 ml-7"
+      color="indigo"
+	  outlined
+	  text
       text-color="white"
     >
-      Кого ищете?:
+     <h1>Кого ищете:</h1> 
     </v-chip>
 	<v-col> 
 	<v-select
@@ -32,12 +33,12 @@
   </v-row>
   <v-row>
 	<v-chip
-      class="mt-8"
-      color="cyan"
-      label
+      class="mt-8  ml-7"
+      color="indigo"
+      text
       text-color="white"
     >
-      Из города:
+	<h1>Из города:</h1>
     </v-chip>
 	<v-col>
 	<v-select
@@ -61,48 +62,54 @@
   </v-row>
   
   <v-row>
+	<v-col cols="24">
+	<v-range-slider
+		v-model="range"
+		class="ma-4"
+  		hint="Выберите желаемый возраст партнера"
+  		max="70"
+  		min="18"
+	>
+	   <template v-slot:prepend>
+   	   
    <v-chip
-      class="mt-4"
-      color="cyan"
-      label
+      class="ma-0"
+      color="indigo"
+      text
       text-color="white"
     >
-      Возраст от
+      <h1>Возраст от:</h1>
     </v-chip>
-	<v-col>
 	<v-text-field
 	:value="range[0]"
-	class="mt-0 pt-0"
+	class="ma-0 pt-0"
 	hide-details
 	single-line
 	type="number"
-	style="width: 60px"
-	v-model="lowerBound"
+	style="width:60px"
 	@change="$set(range, 0, $event)"
 	></v-text-field>
-	</v-col>
-
 	<v-chip
-      class="mt-4"
-      color="cyan"
-      label
+      class="ma-0"
+      color="indigo"
+      text
       text-color="white"
     >
-      до
+      <h1>до</h1>
     </v-chip>
-
-	<v-col>
 	<v-text-field
 	:value="range[1]"
-	class="mt-0 pt-0"
+	class="ma-0 pt-0"
 	hide-details
 	single-line
 	type="number"
 	style="width: 60px"
-	v-model="upperBound"
 	@change="$set(range, 1, $event)"
 	></v-text-field>
-	</v-col>
+	</template>
+	</v-range-slider>
+</v-col>
+
   </v-row>
 
   <v-row>
@@ -111,7 +118,8 @@
 	    x-large
         :disabled="autoUpdate"
         :loading="isUpdating"
-        color="grey darken-4"
+        outlined
+        color="white"
         depressed
         @click="getUsers"
 		block
@@ -300,8 +308,8 @@
 			this.$root.$emit('changeSearch', 
 			this.selectedSex,
 			this.selectedCity, 
-			this.lowerBound, 
-			this.upperBound)
+			this.range[0], 
+			this.range[1])
 		}
 	}
   }

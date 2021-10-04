@@ -1,5 +1,6 @@
 <template>
   <v-row justify="center" app>
+	<v-col cols="12">
     <v-dialog
       v-model="dialog"
       persistent
@@ -7,10 +8,10 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-		  class="ma-2"
 	      tile
 	      x-large  
           dark
+		  block
 		  color="indigo"
           v-bind="attrs"
           v-on="on"
@@ -111,30 +112,31 @@
 		  <v-row>
 		  <v-col cols='6'>
           <v-btn
-            color="blue darken-1"
+            color="indigo"
             text
 			block
 			x-large
             @click="dialog = false"
           >
-            Close
+            Не сохранять
           </v-btn>
 		  </v-col>
 		  <v-col cols='6'>
           <v-btn
-            color="blue darken-1"
+            color="indigo"
             text
 			block
 			x-large
             @click="dialog = false"
           >
-            Save
+            Сохранить 
           </v-btn>
 		  </v-col>
 		</v-row>
         </v-card-actions>
       </v-card>
     </v-dialog>
+		</v-col>
   </v-row>
 </template>
 

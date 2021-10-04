@@ -1,10 +1,9 @@
 <template>
-  <v-app>
+	<v-app>
 	<NavigationBar />
 	<NavigationDrawer />
-    <v-main app>
-      <!-- If using vue-router -->
-      <router-view></router-view>
+    <v-main>
+           <router-view></router-view>
     </v-main>
 	<Footer/>
   </v-app>
@@ -29,3 +28,9 @@ export default {
         ]})
 }
 </script>
+
+<style lang="scss">
+main {
+  background-color:  white;
+}
+</style>

@@ -1,44 +1,17 @@
 <template>
-	<v-card
-	color="rgb(255, 0, 0, 0)"
-	height="100%"
-	class="mx-auto ma-0"
-	tile
-
-	>
-	<v-container>
-	<v-row >
-	<v-col>
 	<v-card 
 	color="rgb(255, 0, 0, 0)"
     class="overflow-y-auto mx-auto"
-	height="833"
+	height="100%"
+	width="100%"
 	align="center">
 	<v-container>
         <v-row             
-		v-for="user in user_list"
-        :key="user"
 		align="center"
         >
  	    <v-col
-        sm="6"
-        md="5"
-        offset-md="2"
-        lg="6"
-        offset-lg="0">
-
-			<UserCard 
-			:id="user.id"
-			:name="user.name" 
-			:age="user.age" 
-			:city="user.city" 
-			:sex="user.sex" 
-			:height="user.height" 
-			:weight="user.weight"
-			/>
-
-  		</v-col>
- 	    <v-col
+		v-for="user in user_list"
+        :key="user"
         sm="6"
         md="5"
         offset-md="2"
@@ -59,10 +32,7 @@
   		</v-row>
  		</v-container>
   		</v-card>
-		</v-col>
-	</v-row>
-		</v-container>
-  </v-card>
+
 </template>
 
 <script>

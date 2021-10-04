@@ -1,5 +1,6 @@
 <template>
   <v-row justify="center">
+	<v-col>
     <v-dialog
       v-model="dialog"
       persistent
@@ -7,7 +8,7 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-		  class="ma-2"
+		  block
 	      tile
 	      x-large  
           dark
@@ -48,6 +49,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+		</v-col>
   </v-row>
 </template>
 <script>

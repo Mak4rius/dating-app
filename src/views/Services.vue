@@ -1,12 +1,12 @@
 <template>
   <v-card
     :loading="loading"
-    class="mx-auto mt-12 mb-12"
 	elevation="24"
-	max-height="89%"
-	max-width="80%"
+	max-height="100%"
+	fill-height
+	max-width="100%"
 	outlined
-	app
+	tile
 	dark
 	color="indigo"
   >

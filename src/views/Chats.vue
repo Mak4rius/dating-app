@@ -9,6 +9,19 @@
 			 :messagesLoaded="messagesLoaded"
 			 :roomsLoaded="roomsLoaded"
 			 :show-new-messages-divider="false"
+			 :text-messages="{
+								ROOMS_EMPTY: 'Нет диалогов',
+								ROOM_EMPTY: 'Диалог не выбран',
+								NEW_MESSAGES: 'Новые сообщения',
+								MESSAGE_DELETED: 'Это сообщение было удалено',
+								MESSAGES_EMPTY: 'Нет сообщений',
+								CONVERSATION_STARTED: 'Диалог начался :',
+								TYPE_MESSAGE: 'Сообщение...',
+								SEARCH: 'Поиск',
+								IS_ONLINE: 'онлайн',
+								LAST_SEEN: 'последнее подключение ',
+								IS_TYPING: 'печатает...'
+							 }"
 			 @send-message="sendMessage"
 			 @fetch-messages="fetchMessages"/>
 		</v-card>
@@ -45,9 +58,11 @@
 			
 			messages.orderBy("timestamp").get().then((docSnapshot) => {
 				docSnapshot.forEach((message) => {
+				const british_date_format = message.data().timestamp.toDate().toLocaleDateString('en-GB')
 				this.messages.push(message.data())
-
-				console.log(message.data().content)
+				const last_index = this.messages.length - 1
+				this.messages[last_index].timestamp = british_date_format 
+				console.log(this.messages[last_index].timestamp)
 			})
 			this.messagesLoaded = true
 			})
@@ -58,18 +73,6 @@
 				*/
 
 				var info = roomId
-				
-				var messageTemplate =
-					{
-					_id: info.roomId,
-					content: info.content,
-					senderId: this.$store.state.user.id,
-					username: this.$store.state.user.name,
-					timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-					saved: true,
-					distributed: true,
-					seen: false, 
-					}
 
 				var fileTemplate = 
 					{
@@ -82,11 +85,45 @@
 						preview: 'ex.com'
 					}	
 
-
 				console.log("Your message is:")
 				if(replyMessage == null){
-						var request = await firebase.firestore().collection('messages').doc(info.roomId).collection('messages').doc().set(messageTemplate)
-						this.messages.push(messageTemplate)
+
+						var OuterMessageTemplate =
+
+									{
+									_id: info.roomId,
+									content: info.content,
+									senderId: this.$store.state.user.id,
+									username: this.$store.state.user.name,
+									timestamp: null,
+									saved: true,
+									distributed: true,
+									seen: false, 
+									}
+
+						var InnerMessageTemplate =
+
+									{
+									_id: info.roomId,
+									content: info.content,
+									senderId: this.$store.state.user.id,
+									username: this.$store.state.user.name,
+									timestamp: null,
+									saved: true,
+									distributed: true,
+									seen: false, 
+									}
+
+					
+						var userDate = new Date()
+
+						InnerMessageTemplate.timestamp = userDate.toLocaleDateString('en-GB')
+						this.messages.push(InnerMessageTemplate)
+
+						var firestoreDate = firebase.firestore.Timestamp.fromDate(userDate)
+						OuterMessageTemplate.timestamp = firestoreDate
+						var request = await firebase.firestore().collection('messages').doc(info.roomId).collection('messages').doc().set(OuterMessageTemplate)
+
 				}else{
 					var replyTemplate = 
 					{
@@ -148,7 +185,7 @@
 				roomTemplate.lastMessage.content = response.data().content
 				roomTemplate.lastMessage.senderId = response.data().senderId
 				roomTemplate.lastMessage.username = response.data().username
-				var wordlyTimestamp = response.data().timestamp
+				var wordlyTimestamp = response.data().timestamp.toDate().toLocaleDateString('en-GB')
 				roomTemplate.lastMessage.timestamp = wordlyTimestamp
 				})
 			})
@@ -168,7 +205,7 @@
 					}else{
 					roomTemplate.users[0].status.state = 'offline'
 					}
-					roomTemplate.users[0].status.lastChanged = fire_state.data().lastChanged
+					roomTemplate.users[0].status.lastChanged = fire_state.data().lastChanged.toDate().toLocaleDateString('en-GB')
 				})
 				roomTemplate.username = doc.data().secondUser.name
 			}
@@ -187,7 +224,7 @@
 					}else{
 					roomTemplate.users[1].status.state = 'offline'
 					}
-					roomTemplate.users[1].status.lastChanged = fire_state.data().lastChanged
+					roomTemplate.users[1].status.lastChanged = fire_state.data().lastChanged.toDate().toLocaleDateString('en-GB')
 				})
 				roomTemplate.username = doc.data().firstUser.name
 			}

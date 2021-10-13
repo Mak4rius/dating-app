@@ -304,12 +304,14 @@
     },
 	methods: {
 		getUsers(){
-
+			console.log("first age", this.range[0]+1)
+			var lowerBound = this.range[0]
+			var upperBound = this.range[1]
 			this.$root.$emit('changeSearch', 
 			this.selectedSex,
 			this.selectedCity, 
-			this.range[0], 
-			this.range[1])
+			lowerBound, 
+			upperBound)
 		}
 	}
   }

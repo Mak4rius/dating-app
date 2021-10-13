@@ -4,7 +4,7 @@
     <v-dialog
       v-model="dialog"
       persistent
-      max-width="500"
+      max-width="580"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -21,7 +21,7 @@
       </template>
       <v-card>
         <v-card-title class="text-h5">
-          Чтобы поменять пароль пройдите по ссылке отправленной вам!
+         	Выберите хотите ли вы удалить свой аккаунт?
         </v-card-title>
         <v-card-actions>
 		<v-row>
@@ -31,7 +31,7 @@
             text
             @click="dialog = false"
           >
-            Не изменять пароль
+            Не удалять аккаунт
           </v-btn>
 		</v-col>
 		<v-col cols='6'>
@@ -41,7 +41,7 @@
 			tile
             @click="dialog = false"
           >
-            Изменить пароль
+            Удалить аккаунт
           </v-btn>
 		</v-col>
 

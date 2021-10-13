@@ -68,7 +68,9 @@
 					city: doc.data().city,
 					sex: doc.data().sex, 
 					height: doc.data().height,
-					weight: doc.data().weight
+					weight: doc.data().weight,
+					online: doc.data().online,
+					lastChanged: doc.data().lastChanged
 				}
 				this.user_list.push(data)
 			})
@@ -97,7 +99,9 @@
 					city: doc.data().city,
 					sex: doc.data().sex, 
 					height: doc.data().height,
-					weight: doc.data().weight
+					weight: doc.data().weight,
+					online: doc.data().online,
+					lastChanged: doc.data().lastChanged
 				}
 				console.log(doc.data().name)
 				this.user_list.push(data)
@@ -123,7 +127,9 @@
 					city: doc.data().city,
 					sex: doc.data().sex, 
 					height: doc.data().height,
-					weight: doc.data().weight
+					weight: doc.data().weight,
+					online: doc.data().online,
+					lastChanged: doc.data().lastChanged
 				}
 				console.log(doc.data().name)
 				this.user_list.push(data)
@@ -148,7 +154,9 @@
 					city: doc.data().city,
 					sex: doc.data().sex, 
 					height: doc.data().height,
-					weight: doc.data().weight
+					weight: doc.data().weight,
+					online: doc.data().online,
+					lastChanged: doc.data().lastChanged
 				}
 				console.log(doc.data().name)
 				this.user_list.push(data)

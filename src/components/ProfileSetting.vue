@@ -36,14 +36,6 @@
   </v-col>
 
   <v-col cols="12">
-  <IpHistory/>
-  </v-col>
-
-  <v-col cols="12">
-  <Settings/>
-  </v-col>
-
-  <v-col cols="12">
   <QuitThisDevice/>
   </v-col>
 

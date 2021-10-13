@@ -51,7 +51,7 @@
                                             <v-text-field v-model="firstName" :rules="[rules.required]" label="Имя" maxlength="20" required></v-text-field>
                                         </v-col>
 										<v-col cols="12" sm="3" md="3">
-                                        <v-text-field v-model="age" :rules="[rules.required]" label="Возраст" maxlength="20" required></v-text-field>
+                                        <v-text-field v-model="age" :rules="[rules.required]"  type="number" label="Возраст" maxlength="20" required></v-text-field>
                                         </v-col>
 										<v-radio-group
 										v-model="radios"
@@ -71,10 +71,10 @@
 										</v-col>
 										</v-radio-group>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="height" :rules="[rules.required]" label="Рост" maxlength="20" required></v-text-field>
+                                            <v-text-field v-model="height"   type="number" :rules="[rules.required]" label="Рост" maxlength="20" required></v-text-field>
                                         </v-col>
 										<v-col cols="12" sm="6" md="6">
-                                            <v-text-field v-model="weight" :rules="[rules.required]" label="Вес" maxlength="20" required></v-text-field>
+                                            <v-text-field v-model="weight"   type="number" :rules="[rules.required]" label="Вес" maxlength="20" required></v-text-field>
                                         </v-col>
 										<v-col cols="12" sm="6" md="6">
 										<v-slider
@@ -344,11 +344,11 @@ export default {
 					email: this.email,
 					password: this.password,
 					name: this.firstName,
-					age: this.age,
+					age: parseInt(this.age),
 					city: this.hometown,
 					sex: this.radios,
-					height: this.height,
-					weight: this.weight
+					height: parseInt(this.height),
+					weight: parseInt(this.weight)
 				}
 		  	  this.$store.dispatch('registerUser', 
 				user)

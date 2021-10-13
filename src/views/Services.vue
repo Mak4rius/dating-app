@@ -8,7 +8,7 @@
 	outlined
 	tile
 	dark
-	color="indigo"
+	color="rgb(255, 0, 0, 0.0)"
   >
 
   <v-card-title>

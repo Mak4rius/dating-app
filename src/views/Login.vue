@@ -1,15 +1,15 @@
 <template>
-            <v-card max-width="800px" elevation="24" min-width="360px" outlined height='600px' class="mx-auto mt-10" shaped app>
-                <v-tabs v-model="tab" show-arrows background-color="indigo" icons-and-text dark grow>
-                    <v-tabs-slider color="white"></v-tabs-slider>
+            <v-card max-width="800px" elevation="24" color="rgb(0, 0, 0, 0)" min-width="360px" outlined height='600px' class="mx-auto mt-10" shaped app>
+                <v-tabs v-model="tab" show-arrows background-color="rgb(0, 0, 0, 0)" icons-and-text dark grow>
+                    <v-tabs-slider color="rgb(0, 0, 0, 0)"></v-tabs-slider>
                     <v-tab v-for="i in tabs" :key="i">
                         <v-icon large>{{ i.icon }}</v-icon>
                         <div class="caption py-1">{{ i.name }}</div>
                     </v-tab>
                     <v-tab-item>
-                        <v-card>
-                            <v-card-text>
-                                <v-form ref="loginForm" v-model="valid" lazy-validation>
+                        <v-card color="rgb(0, 0, 0, 0)">
+                            <v-card-text background-color="rgb(0, 0, 0, 0)">
+                                <v-form ref="loginForm" class="rgb(0, 0, 0, 0)" v-model="valid" lazy-validation>
                                     <v-row>
 										<v-col cols="12">
 											<v-spacer></v-spacer>
@@ -32,7 +32,7 @@
                                         <v-col class="d-flex" cols="12" sm="6" xsm="12">
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-btn x-large block :disabled="!valid" color="indigo" class="ma-2 white--text" @click="login">
+                                            <v-btn x-large block :disabled="!valid" color="indigo darken-4 text--white" class="ma-2 white--text" @click="login">
 												<div v-if="loading">Loading</div>
 												<div v-else>Залогиниться</div>
 											</v-btn>
@@ -43,7 +43,7 @@
                         </v-card>
                     </v-tab-item>
                     <v-tab-item>
-                        <v-card>
+                        <v-card color="rgb(0, 0, 0, 0)">
                             <v-card-text>
                                 <v-form ref="registerForm" v-model="valid" lazy-validation>
                                     <v-row dense>
@@ -125,7 +125,7 @@
                                             <v-text-field block v-model="verify" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, passwordMatch]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Подтвердите пароль" counter @click:append="show1 = !show1"></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-btn x-large block :disabled="!valid" color="indigo" class="white--text"  @click="register">
+                                            <v-btn x-large block :disabled="!valid" color="indigo darken-4" class="white--text"  @click="register">
 												<div v-if="loading">Loading</div>
 												<div v-else>Зарегестрироваться</div>
 												</v-btn>

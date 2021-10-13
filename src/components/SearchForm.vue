@@ -5,7 +5,6 @@
 	<v-chip
       class="mt-8 ml-7"
       color="indigo"
-	  outlined
 	  text
       text-color="white"
     >
@@ -82,7 +81,7 @@
     </v-chip>
 	<v-text-field
 	:value="range[0]"
-	class="ma-0 pt-0"
+	class="ma-0 ml-2 pt-0"
 	hide-details
 	single-line
 	type="number"
@@ -90,7 +89,7 @@
 	@change="$set(range, 0, $event)"
 	></v-text-field>
 	<v-chip
-      class="ma-0"
+      class="ma-0 ml-2"
       color="indigo"
       text
       text-color="white"
@@ -99,7 +98,7 @@
     </v-chip>
 	<v-text-field
 	:value="range[1]"
-	class="ma-0 pt-0"
+	class="ma-0 ml-2 pt-0"
 	hide-details
 	single-line
 	type="number"

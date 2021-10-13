@@ -1,14 +1,11 @@
 <template>
   <v-footer
-    color="indigo"
+    color="indigo darken-4"
 	dark
-	app
-	absolute
-
   >
 	<v-row no-gutters>
       <v-col
-        class="indigo  py-4 text-center white--text"
+        class=" indigo darken-4 py-4 text-center white--text"
         cols="12"
       >
 	        <div class="body-1 white--text pt-6 pt-md-0 text-center">

@@ -5,7 +5,7 @@
 	height = "765"
 	outlined
 	dark
-	color="indigo text--white"
+	color="indigo darken-4 text--white"
   >
 
   <v-carousel 

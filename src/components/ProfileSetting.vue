@@ -1,13 +1,13 @@
 <template>
   <v-card
     :loading="loading"
-	elevation="24"
-	min-height="89%"
+	elevation="0"
+	min-height="100%"
 	min-width="100%"
-	outlined
 	dark
-	app
-	color="indigo"
+	shaped
+	clipped-left
+	color="rgb(255, 0, 0, 0.0)"
   >
 
   <v-card-title>

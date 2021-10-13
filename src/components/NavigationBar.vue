@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined dark tile color="indigo" >
+  <v-card outlined dark tile color="indigo darken-4" >
     <v-card-title class="text-center justify-center py-6">
       <h1 class="font-weight-bold text-h3 white--text">
         Yes(Court)
@@ -8,7 +8,7 @@
     <v-tabs
       v-model="tab"
 	  dark
-	  background-color="indigo"
+	  background-color="indigo darken-4"
 	  icons-and-text
 	  centered
     >
@@ -191,8 +191,9 @@ module.exports = {
 				{title:"Профиль", link:"/profile", icon:"account"},
 				{title:"Диалоги", link:"/chats", icon:"chat-processing"},
 				{title:"Поиск", link:"/search", icon:"account-search"},
-				{title:"Услуги", link:"/services", icon:"account-cash"},			
+					
 			]
+			// Add after the development	{title:"Услуги", link:"/services", icon:"account-cash"},	
 		}
 	},
 	computed: {

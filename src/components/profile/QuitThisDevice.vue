@@ -9,10 +9,11 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
 		  block
-	      tile
+	      rounded
 	      x-large  
           dark
-		  color="indigo"
+		  color="indigo darken-4"
+		  elevation="24"
           v-bind="attrs"
           v-on="on"
         >
@@ -39,7 +40,7 @@
             color="indigo"
             text
 			tile
-            @click="dialog = false"
+            @click="logOut"
           >
             Выйти из аккаунта
           </v-btn>
@@ -54,6 +55,12 @@
 </template>
 <script>
   export default {
+	methods: {
+		logOut(){
+			this.$store.dispatch('logoutUser')
+			this.dialog = false
+		}
+	},
     data () {
       return {
         dialog: false,

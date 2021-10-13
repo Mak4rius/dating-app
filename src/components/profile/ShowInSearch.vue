@@ -9,10 +9,11 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
 		  block
-	      tile
+	      rounded
 	      x-large  
           dark
-		  color="indigo"
+		  color="indigo darken-4"
+		  elevation="24"
           v-bind="attrs"
           v-on="on"
         >

@@ -9,10 +9,11 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
 		  block
-	      tile
+	      rounded
 	      x-large  
           dark
-		  color="indigo"
+		  color="indigo darken-4"
+		  elevation="24"
           v-bind="attrs"
           v-on="on"
         >
@@ -25,6 +26,7 @@
         </v-card-title>
 		 <v-card-actions>
 			<v-file-input
+			v-model="photos"
 			accept="image/*"
 			label="Нажмите чтобы добавить фото"
 			chips
@@ -52,7 +54,7 @@
             color="indigo"
             text
 			tile
-            @click="dialog = false"
+            @click="savePhotos"
           >
             Сохранить фотки
           </v-btn>
@@ -73,6 +75,7 @@ import { Ripple } from 'vuetify/lib/directives'
 export default {
 	 data () {
       return {
+		photos:[],
         dialog: false,
       }
     },
@@ -83,6 +86,10 @@ export default {
       'upload-btn': UploadButton
     },
 	methods: {
+	  savePhotos(){
+		  console.log("New thing!!")
+		  this.dialog = false
+	  },
       update (file) {
         // handle file here. File will be an object.
         // If multiple prop is true, it will return an object array of files.

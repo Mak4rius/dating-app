@@ -1,7 +1,8 @@
 <template>
-		<v-card fill-height
-		height="100%"
-		app>
+		<v-card 
+		height="100vh"
+		fluid
+		class="mx-auto">
 <chat-window :currentUserId="currentUserId" 
 			 :height="height"
 			 :rooms="rooms" 
@@ -161,7 +162,7 @@
 						_id: 1234,
 						username: 'John Doe',
 						status: {
-						state: 'offline',
+						state: 'online',
 						lastChanged: 'today, 14:30'
 						}
 					},
@@ -169,7 +170,7 @@
 						_id: 4321,
 						username: 'John Snow',
 						status: {
-						state: 'offline',
+						state: 'online',
 						lastChanged: '14 July, 20:00'
 						}
 					}
@@ -208,6 +209,7 @@
 					roomTemplate.users[0].status.lastChanged = fire_state.data().lastChanged.toDate().toLocaleDateString('en-GB')
 				})
 				roomTemplate.username = doc.data().secondUser.name
+				console.log(roomTemplate.users[0].status.state)
 			}
 			else{
 				roomTemplate.roomId = doc.id
@@ -227,6 +229,7 @@
 					roomTemplate.users[1].status.lastChanged = fire_state.data().lastChanged.toDate().toLocaleDateString('en-GB')
 				})
 				roomTemplate.username = doc.data().firstUser.name
+				console.log(roomTemplate.users[1].status.state)
 			}
 			this.rooms.push(roomTemplate)
 		})
@@ -243,7 +246,7 @@
       drawer: null,
       currentUserId: null,
 	  currentRoomId: null,
-	  height: '100%',
+	  height: '100vh',
 	  rooms: [],
 	  messages:[],
       links: [

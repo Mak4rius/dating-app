@@ -1,7 +1,7 @@
 <template>
 	<v-navigation-drawer 
 	v-if="$route.fullPath === '/search' || $route.fullPath === '/history'"
-      color="indigo"
+      color="indigo darken-4"
 	  dark
 	  width="100%"
 	  floating

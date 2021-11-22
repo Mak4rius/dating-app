@@ -31,7 +31,7 @@ export default {
 
 <style lang="scss">
 main {
-	background: linear-gradient(-45deg, #A63446 60%, #1A237E 60%);
+	background: linear-gradient(#1A237E,#283593,#303F9F, #3949AB);
 	height: 100vh
 }
 </style>

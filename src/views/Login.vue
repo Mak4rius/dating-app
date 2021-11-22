@@ -1,5 +1,5 @@
 <template>
-            <v-card max-width="800px" elevation="24" color="rgb(0, 0, 0, 0)" min-width="360px" outlined height='600px' class="mx-auto mt-10" shaped app>
+            <v-card max-width="800px" elevation="24" color="#283593" min-width="360px" outlined height='600px' class="mx-auto mt-10" shaped app>
                 <v-tabs v-model="tab" show-arrows background-color="rgb(0, 0, 0, 0)" icons-and-text dark grow>
                     <v-tabs-slider color="rgb(0, 0, 0, 0)"></v-tabs-slider>
                     <v-tab v-for="i in tabs" :key="i">
@@ -151,8 +151,8 @@ export default {
 	dialog: true,
     tab: 0,
     tabs: [
-        {name:"Login", icon:"mdi-account"},
-        {name:"Register", icon:"mdi-account-outline"}
+        {name:"Логин", icon:"mdi-account"},
+        {name:"Регистрация", icon:"mdi-account-outline"}
     ],
 	cities: [
 'Абакан'
@@ -371,7 +371,7 @@ export default {
 				.then(() => {
 					console.log('LOGGED IN!')
 					console.log(this.$store.state.user)
-					this.$router.push('/')
+					this.$router.push('/profile')
 				})
 				.catch(err => {
 					console.log('NOT LOGGED IN!')

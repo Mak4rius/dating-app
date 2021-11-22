@@ -44,7 +44,7 @@
           <v-btn
             color="indigo"
             text
-            @click="dialog = false"
+            @click="quit"
           >
             Не сохранять фотки
           </v-btn>
@@ -71,6 +71,7 @@
 <script>
 import UploadButton from 'vuetify-upload-button'
 import { Ripple } from 'vuetify/lib/directives'
+import firebase from "firebase"
 
 export default {
 	 data () {
@@ -88,11 +89,32 @@ export default {
 	methods: {
 	  savePhotos(){
 		  console.log("New thing!!")
+		  this.$store.state.user.photos.forEach((photo) => {console.log(photo)})
+		  console.log("The newest thing!")
+		  console.log(this.$store.state.user.photos)
+		  var timestamp = new Date().getTime()
+		  this.photos.forEach((photo, index) =>  {
+		   var storageRef = firebase.storage().ref(this.$store.state.user.id + (timestamp + index).toString() ) 
+		   storageRef.put(photo).then((snapshot) => {
+			   snapshot.ref.getDownloadURL().then((downloadURL) => {
+				   this.$store.state.user.photos.push(downloadURL) 
+				   firebase.firestore().collection('users').doc(this.$store.state.user.id).update({ photos:  firebase.firestore.FieldValue.arrayUnion(downloadURL) })
+			   })})
+		   })
+		  
+		  this.$store.state.user.photos.forEach((photo) => {console.log(photo)})
+		  console.log("Over!")
+		  this.photos = []
 		  this.dialog = false
+	  },
+	  quit(){
+		this.photos = []
+		this.dialog = false
 	  },
       update (file) {
         // handle file here. File will be an object.
         // If multiple prop is true, it will return an object array of files.
+
       }
 	}	
 }

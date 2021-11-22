@@ -33,6 +33,7 @@
 			:sex="this.$store.state.user.sex"
 			:height="this.$store.state.user.height"
 			:weight="this.$store.state.user.weight"
+			:photos="this.$store.state.user.photos"
 			/>
         </base-material-card>
       </v-col>

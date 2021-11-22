@@ -48,7 +48,7 @@
 					</v-col>
 			  </v-radio-group>
 			  <v-col cols="6">
-			  <v-text-field v-model="age" :rules="[rules.required]" label="Возраст" maxlength="2" required></v-text-field>
+			  <v-text-field v-model="age" type="number" :rules="[rules.required]" label="Возраст" maxlength="2" required></v-text-field>
 			  </v-col>		
 			  <v-col cols="6">
 			  <v-slider
@@ -61,7 +61,7 @@
 				></v-slider>
 			  </v-col>		
               <v-col cols="6">
-                    <v-text-field v-model="height" :rules="[rules.required]" label="Рост ( в сантиметрах )" maxlength="3" required></v-text-field>
+                    <v-text-field v-model="height" type="number" :rules="[rules.required]" label="Рост ( в сантиметрах )" maxlength="3" required></v-text-field>
               </v-col>
 			  <v-col cols="6" >
 						<v-slider
@@ -73,7 +73,7 @@
 						></v-slider>
 			  </v-col>
               <v-col cols="6">
-					<v-text-field v-model="weight" :rules="[rules.required]" label="Вес ( в киллограмах ) " maxlength="3" required></v-text-field>                  
+					<v-text-field v-model="weight" type="number" :rules="[rules.required]" label="Вес ( в киллограмах ) " maxlength="3" required></v-text-field>                  
               </v-col>
 			  <v-col cols="6">
 					<v-slider
@@ -128,7 +128,7 @@
             text
 			block
 			x-large
-            @click="dialog = false"
+            @click="changeUserDetails"
           >
             Сохранить 
           </v-btn>
@@ -142,6 +142,8 @@
 </template>
 
 <script>
+import firebase from "firebase"
+
   export default {
 	beforeMount(){
 		this.name = this.$store.state.user.name
@@ -150,6 +152,31 @@
 		this.height = this.$store.state.user.height
 		this.weight = this.$store.state.user.weight
 		this.radios = this.$store.state.user.sex
+	},
+	methods: {
+		changeUserDetails(){
+			this.$store.state.user.name = this.name
+			this.$store.state.user.age = this.age
+			this.$store.state.user.city = this.city
+			this.$store.state.user.height = this.height
+			this.$store.state.user.weight = this.weight
+			this.$store.state.user.sex = this.radios
+			firebase.firestore().collection('users').doc(this.$store.state.user.id)
+			.update({name: this.name,
+					 age: this.age, 
+					 city: this.city, 
+					 height: this.height,
+					 weight: this.weight, 
+					 sex: this.radios
+			}).then(() => {
+				console.log("Данные пользователя обновились!")
+			})
+			.catch((error) => {
+				// The document probably doesn't exist.
+				console.error("Произошла ошибка: ", error)
+			})
+			this.dialog = false
+		}
 	},
     data: () => ({
       dialog: false,

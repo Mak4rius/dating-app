@@ -40,7 +40,7 @@
             color="indigo"
             text
 			tile
-            @click="dialog = false"
+            @click="deleteAccount"
           >
             Удалить аккаунт
           </v-btn>
@@ -53,12 +53,31 @@
 	</v-col>
   </v-row>
 </template>
+
 <script>
+import firebase from "firebase"
+
   export default {
     data () {
       return {
         dialog: false,
       }
     },
+	methods: {
+		deleteAccount(){
+			const user = firebase.auth().currentUser
+			user.delete().then(() => {
+				console.log("Логин и Пароль пользователя успешно удалены!")
+				}).catch((error) => {
+				console.error("Ошибка при удалении пользователя #2: ", error)
+				})
+			firebase.firestore().collection("users").doc(this.$store.state.user.id).delete().then(() => {
+				console.log("Пользователь успешно удален из базы данных!")
+			}).catch((error) => {
+				console.error("Ошибка при удалении пользователя #1: ", error)
+			})
+			this.dialog = false
+		}
+	},
   }
 </script>

@@ -59,6 +59,7 @@
 		logOut(){
 			this.$store.dispatch('logoutUser')
 			this.dialog = false
+			this.$router.push('/search')
 		}
 	},
     data () {

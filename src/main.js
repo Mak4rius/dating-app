@@ -11,6 +11,7 @@ import VueCardCarousel from "vue-card-carousel"
 import { Ripple } from 'vuetify/lib/directives'
 
 
+
 Vue.use(Chat)
 
 Vue.use(VueTyperPlugin)
@@ -24,14 +25,13 @@ new Vue({
 	created () {
 		// Configuration
 		let config = {
-			apiKey: "AIzaSyA9jZYtrTl7qUkq8PnPimIXORhCP41M728",
-			authDomain: "web-app-e7c86.firebaseapp.com",
-			databaseURL: "https://web-app-e7c86-default-rtdb.europe-west1.firebasedatabase.app",
-			projectId: "web-app-e7c86",
-			storageBucket: "web-app-e7c86.appspot.com",
-			messagingSenderId: "990912086423",
-			appId: "1:990912086423:web:11322d4938f2f7eaf084d2",
-			measurementId: "G-3JQG0H1JBW"
+			apiKey: "AIzaSyAqdskTz4-faAkbNMvWzpeBnxFvLUcIZUo",
+			authDomain: "my-project-4da3c.firebaseapp.com",
+			projectId: "my-project-4da3c",
+			storageBucket: "my-project-4da3c.appspot.com",
+			messagingSenderId: "685608924114",
+			appId: "1:685608924114:web:99c10666f0cd963d060e0b",
+			measurementId: "G-KBKZJCDVFP"
 		}
 		// Firebase Initialize
 		firebase.initializeApp(config)

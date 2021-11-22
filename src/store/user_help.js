@@ -5,8 +5,12 @@ export default class User {
 		age, 
 		sex, 
 		city,
-		height, 
+		height,
 		weight,
+		telegram,
+		whatsup,
+		phone,
+		photos,
 		online,
 		lastChanged
 		) 
@@ -18,6 +22,10 @@ export default class User {
 		this.city = city
 		this.height = height
 		this.weight = weight
+		this.telegram = telegram
+		this.whatsup = whatsup
+		this.phone = phone
+		this.photos = photos 
 		this.online = online
 		this.lastChanged = lastChanged
  	}

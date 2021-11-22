@@ -49,6 +49,10 @@ export default new Vuex.Store({
 		 * 	sex: user_sex 
 		 *  height: user_height
 		 * 	weight: user_weight
+		 * 	telegram: user_telegram
+		 * 	whatsup: user_whatsup
+		 * 	phone: user_phone
+		 * 	photos: array_of_photos
 		 * 	online: True if user online, otherwise false
 		 */
 		commit('clearError')
@@ -65,6 +69,10 @@ export default new Vuex.Store({
 			sex: sex,
 			height: height,
 			weight: weight,
+			telegram: 'None', 
+			whatsup: 'None',
+			phone: 'None',
+			photos: [],
 			online: true,
 			lastChanged: timestamp
 		}
@@ -76,6 +84,10 @@ export default new Vuex.Store({
 			sex: unique_user.sex,
 			height: unique_user.height,
 			weight: unique_user.weight,
+			telegram: unique_user.telegram,
+			whatsup: unique_user.whatsup,
+			phone: unique_user.phone,
+			photos: unique_user.photos,
 			online: unique_user.online,
 			lastChanged: timestamp
 		})	
@@ -88,6 +100,10 @@ export default new Vuex.Store({
 			unique_user.city,
 			unique_user.height,
 			unique_user.weight,
+			unique_user.telegram,
+			unique_user.whatsup,
+			unique_user.phone,
+			unique_user.photos,
 			unique_user.online,
 			unique_user.lastChanged
 			))
@@ -97,6 +113,12 @@ export default new Vuex.Store({
 			commit('setError', error.message)
 			throw error
 		}
+	},
+
+	async uploadImages({commit}, {url}){
+		/**
+		 * This function uploads user's photos to s3 storage and it returns url
+		 */
 	},
 	
 	async loginUser({commit}, {email, password}){
@@ -125,6 +147,10 @@ export default new Vuex.Store({
 			actual_user.data().city,
 			actual_user.data().height,
 			actual_user.data().weight,
+			actual_user.data().telegram,
+			actual_user.data().whatsup,
+			actual_user.data().phone,
+			actual_user.data().photos,
 			actual_user.data().online,
 			actual_user.data().lastChanged
 			))
@@ -147,6 +173,10 @@ export default new Vuex.Store({
 			actual_user.data().city, 
 			actual_user.data().height, 
 			actual_user.data().weight,
+			actual_user.data().telegram,
+			actual_user.data().whatsup,
+			actual_user.data().phone,
+			actual_user.data().photos,
 			actual_user.data().online,
 			actual_user.data().lastChanged
 			))

@@ -26,6 +26,7 @@
 			:sex="user.sex" 
 			:height="user.height" 
 			:weight="user.weight"
+			:photos="user.photos"
 			/>
 
   		</v-col>
@@ -69,6 +70,10 @@
 					sex: doc.data().sex, 
 					height: doc.data().height,
 					weight: doc.data().weight,
+					telegram: doc.data().telegram,
+					whatsup: doc.data().whatsup,
+					phone: doc.data().phone,
+					photos: doc.data().photos,
 					online: doc.data().online,
 					lastChanged: doc.data().lastChanged
 				}
@@ -100,6 +105,10 @@
 					sex: doc.data().sex, 
 					height: doc.data().height,
 					weight: doc.data().weight,
+					telegram: doc.data().telegram,
+					whatsup: doc.data().whatsup,
+					phone: doc.data().phone,
+					photos: doc.data().photos,
 					online: doc.data().online,
 					lastChanged: doc.data().lastChanged
 				}
@@ -128,6 +137,11 @@
 					sex: doc.data().sex, 
 					height: doc.data().height,
 					weight: doc.data().weight,
+					telegram: doc.data().telegram,
+					whatsup: doc.data().whatsup,
+					phone: doc.data().phone,
+					photos: doc.data().photos,
+					online: doc.data().online,
 					online: doc.data().online,
 					lastChanged: doc.data().lastChanged
 				}
@@ -155,6 +169,11 @@
 					sex: doc.data().sex, 
 					height: doc.data().height,
 					weight: doc.data().weight,
+					telegram: doc.data().telegram,
+					whatsup: doc.data().whatsup,
+					phone: doc.data().phone,
+					photos: doc.data().photos,
+					online: doc.data().online,
 					online: doc.data().online,
 					lastChanged: doc.data().lastChanged
 				}

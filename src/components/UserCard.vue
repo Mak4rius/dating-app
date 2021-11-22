@@ -17,7 +17,7 @@
     <v-carousel-item
       v-for="(photo,i) in photos"
       :key="i"
-      :src="photo.src"
+      :src="photo"
     ></v-carousel-item>
   </v-carousel>
 
@@ -107,23 +107,9 @@
   import firebase from "firebase"
 
   export default {	
-	props: ['id', 'name', 'city', 'age', 'sex', 'height', 'weight'],
+	props: ['id', 'name', 'city', 'age', 'sex', 'height', 'weight', 'photos'],
     data: () => ({
-      loading: false,
-	  photos: [
-		{
-		src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-		},
-		{
-		src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-		},
-		{
-		src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-		},
-		{
-		src: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-		},
-	  ],
+      loading: false
     }),
 
     methods: {

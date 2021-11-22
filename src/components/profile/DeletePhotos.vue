@@ -17,36 +17,36 @@
           v-bind="attrs"
           v-on="on"
         >
-		Добавить/Изменить фото
+		Удалить фото
         </v-btn>
       </template>
       <v-card>
 		<v-card-title class="text-h5">
-          Добавте ваши фотки:
+          Удалите ваши фотки:
         </v-card-title>
-		 <v-card-actions>
-			<v-file-input
-			v-model="photos"
-			accept="image/*"
-			label="Нажмите чтобы добавить фото"
-			chips
-			counter
-			multiple
-			prepend-icon="mdi-camera"
-			filled
-			small-chips
-			truncate-length="50"
-			></v-file-input>
-		 </v-card-actions>
-		 <v-card-actions>
-			 		<v-row>
+		<v-card-text>
+		<v-carousel v-model="carouselIndex" hide-delimiters>
+			<v-carousel-item
+			v-for="(photo,i) in this.$store.state.user.photos"
+			:key="i"
+			:src="photo"
+			transition="fade-transition"
+			></v-carousel-item>
+		</v-carousel>		
+		<v-col cols="12">
+			<v-btn color="indigo" dark x-large block  @click="deleteImage"> Удалить фото </v-btn>
+		</v-col>
+		<v-divider></v-divider>
+		</v-card-text>
+		<v-card-actions>
+		<v-row>
 		<v-col cols='6'>
           <v-btn
             color="indigo"
             text
             @click="quit"
           >
-            Не сохранять фотки
+            Не сохранять 
           </v-btn>
 		</v-col>
 		<v-col cols='6'>
@@ -56,7 +56,7 @@
 			tile
             @click="savePhotos"
           >
-            Сохранить фотки
+            Сохранить изменения
           </v-btn>
 		</v-col>
 
@@ -87,24 +87,14 @@ export default {
       'upload-btn': UploadButton
     },
 	methods: {
+	  deleteImage(){
+		  let removed_image = this.$store.state.user.photos[this.carouselIndex]
+		  this.$store.state.user.photos.splice(this.carouselIndex, this.carouselIndex)
+		  firebase.firestore().collection('users').doc(this.$store.state.user.id).update({
+			  photos: firebase.firestore.FieldValue.arrayRemove(removed_image)
+		  })
+	  },
 	  savePhotos(){
-		  console.log("New thing!!")
-		  this.$store.state.user.photos.forEach((photo) => {console.log(photo)})
-		  console.log("The newest thing!")
-		  console.log(this.$store.state.user.photos)
-		  var timestamp = new Date().getTime()
-		  this.photos.forEach((photo, index) =>  {
-		   var storageRef = firebase.storage().ref(this.$store.state.user.id + (timestamp + index).toString() ) 
-		   storageRef.put(photo).then((snapshot) => {
-			   snapshot.ref.getDownloadURL().then((downloadURL) => {
-				   this.$store.state.user.photos.push(downloadURL) 
-				   firebase.firestore().collection('users').doc(this.$store.state.user.id).update({ photos:  firebase.firestore.FieldValue.arrayUnion(downloadURL) })
-			   })})
-		   })
-		  
-		  this.$store.state.user.photos.forEach((photo) => {console.log(photo)})
-		  console.log("Over!")
-		  this.photos = []
 		  this.dialog = false
 	  },
 	  quit(){

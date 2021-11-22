@@ -17,14 +17,18 @@
   </v-card-title>
   <v-row
       class="mb-6"
-      >
+  >
 	  
   <v-col cols="12">
   <ChangeUser/>
   </v-col>
 
   <v-col cols="12">
-  <MyPhotos/>
+  <AddPhotos/>
+  </v-col>
+
+  <v-col cols="12">
+  <DeletePhotos/>
   </v-col>
 
   <v-col cols="12">
@@ -48,7 +52,8 @@
 
 <script>
   import ChangeUser from '../components/profile/ChangeUser'
-  import MyPhotos from '../components/profile/MyPhotos'
+  import AddPhotos from '../components/profile/AddPhotos'
+  import DeletePhotos from '../components/profile/DeletePhotos'
   import ChangePassword from '../components/profile/ChangePassword'
   import ShowInSearch from '../components/profile/ShowInSearch'
   import IpHistory from '../components/profile/IpHistory'
@@ -59,7 +64,8 @@
   export default {
     components: {
 		ChangeUser,
-		MyPhotos,
+		AddPhotos,
+		DeletePhotos,
 		ChangePassword,
 		ShowInSearch,
 		IpHistory,

@@ -22,7 +22,7 @@
       </template>
       <v-card>
         <v-card-title class="text-h5">
-          Введите новый пароль !
+          Введите новый пароль :
         </v-card-title>
 		<v-card-text>
 		<v-form  v-model="valid">

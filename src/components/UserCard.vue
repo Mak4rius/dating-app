@@ -21,7 +21,7 @@
     ></v-carousel-item>
   </v-carousel>
 
-    <v-card-title >{{name}}</v-card-title>
+    <v-card-title >{{username}}</v-card-title>
 
     <v-divider class="mx-4 white"></v-divider>
 
@@ -107,7 +107,7 @@
   import firebase from "firebase"
 
   export default {	
-	props: ['id', 'name', 'city', 'age', 'sex', 'height', 'weight', 'photos'],
+	props: ['_id', 'username', 'city', 'age', 'sex', 'height', 'weight', 'photos'],
     data: () => ({
       loading: false
     }),
@@ -115,11 +115,11 @@
     methods: {
 		async sendMessage() {
 			var thread_id = 0
-			console.log('MESSAGE SENDED', this.name, this.id)
-			if(this.id > this.$store.state.user.id){
-				thread_id = this.$store.state.user.id + this.id
+			console.log('MESSAGE SENDED', this.username, this._id)
+			if(this.id > this.$store.state.user._id){
+				thread_id = this.$store.state.user._id + this._id
 			}else{
-				thread_id = this.id + this.$store.state.user.id
+				thread_id = this._id + this.$store.state.user._id
 			}
 
 			var docRef = await firebase.firestore().collection("chats").doc(thread_id)
@@ -133,14 +133,14 @@
 					var createdRoom = firebase.firestore().collection("chats")
 					.doc(thread_id)
 					.set({
-					users: [this.$store.state.user.id, this.id],
+					users: [this.$store.state.user._id, this._id],
 					firstUser: {
-						name: this.$store.state.user.name,
-						id: this.$store.state.user.id
+						name: this.$store.state.user.username,
+						id: this.$store.state.user._id
 					},
 					secondUser: {
-						name: this.name,
-						id: this.id
+						name: this.username,
+						id: this._id
 					}
 					})
 					console.log("Chat room created")

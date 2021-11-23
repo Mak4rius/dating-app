@@ -343,7 +343,7 @@ export default {
 		  	  const user = {
 					email: this.email,
 					password: this.password,
-					name: this.firstName,
+					username: this.firstName,
 					age: parseInt(this.age),
 					city: this.hometown,
 					sex: this.radios,

@@ -90,7 +90,7 @@ export default {
 	  deleteImage(){
 		  let removed_image = this.$store.state.user.photos[this.carouselIndex]
 		  this.$store.state.user.photos.splice(this.carouselIndex, this.carouselIndex)
-		  firebase.firestore().collection('users').doc(this.$store.state.user.id).update({
+		  firebase.firestore().collection('users').doc(this.$store.state.user._id).update({
 			  photos: firebase.firestore.FieldValue.arrayRemove(removed_image)
 		  })
 	  },

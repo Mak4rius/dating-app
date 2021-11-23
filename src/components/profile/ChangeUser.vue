@@ -146,7 +146,7 @@ import firebase from "firebase"
 
   export default {
 	beforeMount(){
-		this.name = this.$store.state.user.name
+		this.username = this.$store.state.user.username
 		this.age = this.$store.state.user.age
 		this.city = this.$store.state.user.city
 		this.height = this.$store.state.user.height
@@ -155,14 +155,14 @@ import firebase from "firebase"
 	},
 	methods: {
 		changeUserDetails(){
-			this.$store.state.user.name = this.name
+			this.$store.state.user.username = this.username
 			this.$store.state.user.age = this.age
 			this.$store.state.user.city = this.city
 			this.$store.state.user.height = this.height
 			this.$store.state.user.weight = this.weight
 			this.$store.state.user.sex = this.radios
-			firebase.firestore().collection('users').doc(this.$store.state.user.id)
-			.update({name: this.name,
+			firebase.firestore().collection('users').doc(this.$store.state.user._id)
+			.update({username: this.username,
 					 age: this.age, 
 					 city: this.city, 
 					 height: this.height,

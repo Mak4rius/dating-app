@@ -10,8 +10,6 @@ import Delete from '../views/Delete.vue'
 import ChangePassword from '../views/ChangePassword.vue'
 import Insearch from '../views/Insearch.vue'
 import Logging from '../views/Logging.vue'
-import Person from '../views/Person.vue'
-import Photo from '../views/Photo.vue'
 import Settings from '../views/Settings.vue'
 import Login from '../views/Login.vue'
 
@@ -87,24 +85,6 @@ const routes = [
     path: '/iplog',
     name: 'История входов',
     component: Logging,
-	beforeEnter(to,from,next){
-		// if checkUser is true, then next(), if false then next('/login')
-		store.getters.checkUser ? next() : next('/login') 
-	}
-  },
-  {
-    path: '/person',
-    name: 'Изменить анкету',
-    component: Person,
-	beforeEnter(to,from,next){
-		// if checkUser is true, then next(), if false then next('/login')
-		store.getters.checkUser ? next() : next('/login') 
-	}
-  },
-  {
-    path: '/photo',
-    name: 'Фото',
-    component: Photo,
 	beforeEnter(to,from,next){
 		// if checkUser is true, then next(), if false then next('/login')
 		store.getters.checkUser ? next() : next('/login') 

@@ -1,9 +1,27 @@
 <template>
   <v-card outlined dark tile color="indigo darken-4" >
     <v-card-title class="text-center justify-center py-6">
-      <h1 class="font-weight-bold text-h3 white--text">
-        Yes(Court)
-      </h1>
+	      <p class="text-h2" text-color="white">
+        	<vue-typer
+			:text='["Эскорт и Знакомства "]'
+			:repeat='0'
+			:shuffle='false'
+			initial-action='typing'
+			:pre-type-delay='70'
+			:type-delay='70'
+			:pre-erase-delay='2000'
+			:erase-delay='250'
+			erase-style='select-all'
+			:erase-on-complete='false'
+			caret-animation='smooth'
+			></vue-typer>
+      </p>
+	<v-img
+  max-height="100"
+  max-width="100"
+  class="mb-3 ml-2"
+  src="../assets/mac1024.png"
+></v-img>
     </v-card-title>
     <v-tabs
       v-model="tab"
@@ -210,3 +228,23 @@ module.exports = {
 	}
 }
 </script>
+
+<style>
+.vue-typer {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.vue-typer .custom.char {
+  color: #FFFF;
+  background-color: #1A237E;
+}
+.vue-typer .custom.char.selected {
+  background-color: #1A237E;
+}
+
+.vue-typer .custom.caret {
+  width: 8px;
+  background-color: #FFFF;
+  display: inline-block;
+}
+</style>

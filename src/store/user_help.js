@@ -1,7 +1,7 @@
 export default class User {
 	constructor (
-		id, 
-		name, 
+		_id, 
+		username, 
 		age, 
 		sex, 
 		city,
@@ -15,8 +15,8 @@ export default class User {
 		lastChanged
 		) 
 		{
-		this.id = id
-		this.name = name
+		this._id = _id
+		this.username = username
 		this.age = age
 		this.sex = sex
 		this.city = city

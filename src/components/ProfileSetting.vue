@@ -56,7 +56,6 @@
   import DeletePhotos from '../components/profile/DeletePhotos'
   import ChangePassword from '../components/profile/ChangePassword'
   import ShowInSearch from '../components/profile/ShowInSearch'
-  import IpHistory from '../components/profile/IpHistory'
   import Settings from '../components/profile/Settings'
   import QuitThisDevice from '../components/profile/QuitThisDevice'
   import DeleteUser from '../components/profile/DeleteUser'
@@ -68,7 +67,6 @@
 		DeletePhotos,
 		ChangePassword,
 		ShowInSearch,
-		IpHistory,
 		Settings,
 		QuitThisDevice,
 		DeleteUser

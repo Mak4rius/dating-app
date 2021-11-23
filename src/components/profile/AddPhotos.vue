@@ -98,7 +98,7 @@ export default {
 		   storageRef.put(photo).then((snapshot) => {
 			   snapshot.ref.getDownloadURL().then((downloadURL) => {
 				   this.$store.state.user.photos.push(downloadURL) 
-				   firebase.firestore().collection('users').doc(this.$store.state.user.id).update({ photos:  firebase.firestore.FieldValue.arrayUnion(downloadURL) })
+				   firebase.firestore().collection('users').doc(this.$store.state.user._id).update({ photos:  firebase.firestore.FieldValue.arrayUnion(downloadURL) })
 			   })})
 		   })
 		  

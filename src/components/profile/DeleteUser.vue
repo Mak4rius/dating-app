@@ -71,7 +71,7 @@ import firebase from "firebase"
 				}).catch((error) => {
 				console.error("Ошибка при удалении пользователя #2: ", error)
 				})
-			firebase.firestore().collection("users").doc(this.$store.state.user.id).delete().then(() => {
+			firebase.firestore().collection("users").doc(this.$store.state.user._id).delete().then(() => {
 				console.log("Пользователь успешно удален из базы данных!")
 			}).catch((error) => {
 				console.error("Ошибка при удалении пользователя #1: ", error)

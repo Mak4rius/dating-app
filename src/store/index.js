@@ -43,8 +43,8 @@ export default new Vuex.Store({
 		/**
 		 * This function register a user, and pass all the information about the user in the local storage.
 		 * user: 
-		 * 	id: user_id
-		 * 	name: user_name
+		 * 	_id: user_id
+		 * 	username: user_name
 		 * 	age: user_age 
 		 * 	sex: user_sex 
 		 *  height: user_height
@@ -62,8 +62,8 @@ export default new Vuex.Store({
 		// We create a blueprint with the set of parameters for our user
 		var timestamp = firebase.firestore.FieldValue.serverTimestamp()
 		const unique_user = {
-			id: user.user.uid,
-			name:  name,
+			_id: user.user.uid,
+			username:  name,
 			age: age,
 			city: city,
 			sex: sex,
@@ -78,7 +78,8 @@ export default new Vuex.Store({
 		}
 		// We add a user, with specific id to collection
 		const create_user = await firebase.firestore().collection('users').doc(user.user.uid).set({
-			name: unique_user.name,
+			_id: user.user.uid,
+			username: unique_user.username,
 			age: unique_user.age,
 			city: unique_user.city,
 			sex: unique_user.sex,
@@ -93,8 +94,8 @@ export default new Vuex.Store({
 		})	
 
 		commit('setUser', new User(
-			unique_user.id, 
-			unique_user.name,
+			unique_user._id, 
+			unique_user.username,
 			unique_user.age,
 			unique_user.sex,
 			unique_user.city,
@@ -141,7 +142,7 @@ export default new Vuex.Store({
 
 		commit('setUser', new User(
 			user.user.uid, 
-			actual_user.data().name,
+			actual_user.data().username,
 			actual_user.data().age,
 			actual_user.data().sex,
 			actual_user.data().city,
@@ -167,7 +168,7 @@ export default new Vuex.Store({
 		commit('setUser', 
 			new User(
 			payload.uid, 
-			actual_user.data().name, 
+			actual_user.data().username, 
 			actual_user.data().age,
 			actual_user.data().sex, 
 			actual_user.data().city, 
@@ -184,7 +185,7 @@ export default new Vuex.Store({
 	},
 	async logoutUser({commit}){
 		console.log(this.state.user.uid)
-		await firebase.firestore().collection('users').doc(this.state.user.id).update({
+		await firebase.firestore().collection('users').doc(this.state.user._id).update({
 			online: false,
 			lastChanged: firebase.firestore.FieldValue.serverTimestamp()
 			})

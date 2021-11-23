@@ -19,8 +19,8 @@
         offset-lg="0">
 
 			<UserCard 
-			:id="user.id"
-			:name="user.name" 
+			:id="user._id"
+			:name="user.username" 
 			:age="user.age" 
 			:city="user.city" 
 			:sex="user.sex" 
@@ -63,8 +63,8 @@
 		firebase.firestore().collection('users').get().then((querySnapshot) => {
 			querySnapshot.forEach((doc)=> {
 				const data = {
-					id: doc.id,
-					name: doc.data().name,
+					id: doc.data()._id,
+					name: doc.data().username,
 					age: doc.data().age,
 					city: doc.data().city,
 					sex: doc.data().sex, 
@@ -98,8 +98,8 @@
 				querySnapshot.forEach((doc)=> {
 				console.log(doc.data())
 				const data = {
-					id: doc.id,
-					name: doc.data().name,
+					id: doc.data()._id,
+					name: doc.data().username,
 					age: doc.data().age,
 					city: doc.data().city,
 					sex: doc.data().sex, 
@@ -112,14 +112,12 @@
 					online: doc.data().online,
 					lastChanged: doc.data().lastChanged
 				}
-				console.log(doc.data().name)
 				this.user_list.push(data)
 			})
 			})
 
 			}
 			else if(sex == 'Девушку'){
-			console.log(sex)
 
 			firebase.firestore().collection('users')
 			.where('city','==',city)
@@ -130,8 +128,8 @@
 			{
 				querySnapshot.forEach((doc)=> {
 				const data = {
-					id: doc.id,
-					name: doc.data().name,
+					id: doc.data()._id,
+					name: doc.data().username,
 					age: doc.data().age,
 					city: doc.data().city,
 					sex: doc.data().sex, 
@@ -145,7 +143,6 @@
 					online: doc.data().online,
 					lastChanged: doc.data().lastChanged
 				}
-				console.log(doc.data().name)
 				this.user_list.push(data)
 			})
 			})
@@ -162,8 +159,8 @@
 			{
 				querySnapshot.forEach((doc)=> {
 				const data = {
-					id: doc.id,
-					name: doc.data().name,
+					id: doc.data()._id,
+					name: doc.data().username,
 					age: doc.data().age,
 					city: doc.data().city,
 					sex: doc.data().sex, 
@@ -177,11 +174,9 @@
 					online: doc.data().online,
 					lastChanged: doc.data().lastChanged
 				}
-				console.log(doc.data().name)
 				this.user_list.push(data)
 			})
 			})
-			console.log(this.user_list)
 			}
 
 		})

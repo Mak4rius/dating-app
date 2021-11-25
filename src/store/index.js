@@ -39,7 +39,7 @@ export default new Vuex.Store({
 		}
 	},
 
-	async registerUser({commit}, {email, password, name, age, city, sex, height, weight}){
+	async registerUser({commit}, {email, password, username, age, city, sex, height, weight}){
 		/**
 		 * This function register a user, and pass all the information about the user in the local storage.
 		 * user: 
@@ -63,10 +63,10 @@ export default new Vuex.Store({
 		var timestamp = firebase.firestore.FieldValue.serverTimestamp()
 		const unique_user = {
 			_id: user.user.uid,
-			username:  name,
+			username: username,
 			age: age,
-			city: city,
 			sex: sex,
+			city: city,
 			height: height,
 			weight: weight,
 			telegram: 'None', 

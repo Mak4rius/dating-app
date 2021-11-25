@@ -12,7 +12,7 @@
 
   <v-card-title>
 	  <p class="text-h2 white--text"> 
-		  Настройки профиля "{{this.$store.state.user.name}}"
+		  Настройки профиля "{{this.$store.state.user.username}}"
 	  </p>
   </v-card-title>
   <v-row

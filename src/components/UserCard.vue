@@ -109,49 +109,32 @@
   export default {	
 	props: ['_id', 'username', 'city', 'age', 'sex', 'height', 'weight', 'photos'],
     data: () => ({
-      loading: false
+      loading: false,
     }),
 
     methods: {
 		async sendMessage() {
 			var thread_id = 0
-			console.log('MESSAGE SENDED', this.username, this._id)
-			if(this.id > this.$store.state.user._id){
+			console.log('MESSAGE SENDED')
+			console.log(this._id)
+			if(this._id > this.$store.state.user._id){
 				thread_id = this.$store.state.user._id + this._id
 			}else{
 				thread_id = this._id + this.$store.state.user._id
 			}
 
-			var docRef = await firebase.firestore().collection("chats").doc(thread_id)
+			var docRef = await firebase.firestore().collection("chatRooms").doc(thread_id)
 
-			docRef.get().then((doc) => {
-				if (doc.exists) {
-					console.log("Document data:", doc.data())
-				} else {
-					console.log("No such document!")
-					console.log("Will create this document")
-					var createdRoom = firebase.firestore().collection("chats")
-					.doc(thread_id)
-					.set({
-					users: [this.$store.state.user._id, this._id],
-					firstUser: {
-						name: this.$store.state.user.username,
-						id: this.$store.state.user._id
-					},
-					secondUser: {
-						name: this.username,
-						id: this._id
-					}
-					})
-					console.log("Chat room created")
-					console.log("FINISH!")
-					this.$router.push('/chats')
-				}
-			}).catch((error) => {
-				console.log("Error getting document:", error);
+			var createdRoom = firebase.firestore()
+			.collection("chatRooms")
+			.doc(thread_id)
+			.set({
+				users: [this._id, this.$store.state.user._id],
+				lastUpdated: new Date()
 			})
 
-			
+			this.$router.push('/chats')
+
 		}
   }}
 </script>

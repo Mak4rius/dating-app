@@ -19,7 +19,7 @@
         offset-lg="0">
 
 			<UserCard 
-			:id="user._id"
+			:_id="user._id"
 			:name="user.username" 
 			:age="user.age" 
 			:city="user.city" 
@@ -63,8 +63,8 @@
 		firebase.firestore().collection('users').get().then((querySnapshot) => {
 			querySnapshot.forEach((doc)=> {
 				const data = {
-					id: doc.data()._id,
-					name: doc.data().username,
+					_id: doc.data()._id,
+					username: doc.data().username,
 					age: doc.data().age,
 					city: doc.data().city,
 					sex: doc.data().sex, 

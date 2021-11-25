@@ -6,7 +6,6 @@
 
 		<chat-window
 			:height="height"
-			:theme="theme"
 			:styles="styles"
 			:current-user-id="this.$store.state.user._id"
 			:room-id="roomId"
@@ -24,12 +23,9 @@
 			@send-message="sendMessage"
 			@edit-message="editMessage"
 			@delete-message="deleteMessage"
-			@open-file="openFile"
-			@open-user-tag="openUserTag"
 			@add-room="addRoom"
 			@room-action-handler="menuActionHandler"
 			@menu-action-handler="menuActionHandler"
-			@send-message-reaction="sendMessageReaction"
 			@typing-message="typingMessage"
 			@toggle-rooms-list="$emit('show-demo-options', $event.opened)"
 		>
@@ -47,6 +43,7 @@
 	components: {
       ChatWindow
     },
+	emits: ['show-demo-options'],
     data: () => ({
 		height: '100vh',
 		roomsPerPage: 15,
@@ -174,9 +171,10 @@
 				// this.incrementDbCounter('Fetch Room Users', roomUserIds.length)
 				const rawUsers = []
 				roomUserIds.forEach(userId => {
-					const promise = firestoreService
-						.getUser(userId)
-						.then(user => user.data())
+					const promise = firebase.firestore()
+					.collection('users')
+					.doc(userId)
+					.get().then((user) => user.data())
 					rawUsers.push(promise)
 				})
 				this.allUsers = [...this.allUsers, ...(await Promise.all(rawUsers))]
@@ -298,6 +296,7 @@
 				this.listenRooms(query)
 
 			}
+			setTimeout(() => console.log('TOTAL', this.dbRequestCount), 2000)
 		},
 		listenLastMessage(room) {
 
@@ -364,6 +363,7 @@
 				}
 
 			this.$emit('show-demo-options', false)
+
 			if (options.reset) {
 				this.resetMessages()
 				this.roomId = room.roomId
@@ -376,7 +376,6 @@
 
 			this.selectedRoom = room.roomId
 
-
 			if(this.lastLoadedMessage){
 
 			const query = firebase.firestore()
@@ -388,34 +387,64 @@
 
 			query.then(messages => {
 				// this.incrementDbCounter('Fetch Room Messages', messages.size)
-				if (this.selectedRoom !== room.roomId) return
+				//if (this.selectedRoom !== room.roomId) return
 				if (messages.empty || messages.docs.length < this.messagesPerPage) {
 					setTimeout(() => (this.messagesLoaded = true), 0)
 				}
+
 				if (options.reset) this.messages = []
+
 				messages.forEach(message => {
 					const formattedMessage = this.formatMessage(room, message)
 					this.messages.unshift(formattedMessage)
 				})
+
 				if (this.lastLoadedMessage) {
 					this.previousLastLoadedMessage = this.lastLoadedMessage
 				}
 				this.lastLoadedMessage = messages.docs[messages.docs.length - 1]
-				const listener = firestoreService.firestoreListener(
-					firestoreService.paginatedMessagesQuery(
-						room.roomId,
-						this.lastLoadedMessage,
-						this.previousLastLoadedMessage
-					),
-					snapshots => {
-						// this.incrementDbCounter('Listen Room Messages', snapshots.size)
-						this.listenMessages(snapshots, room)
-					}
-				)
-				this.listeners.push(listener)
+
+				if(this.lastLoadedMessage && this.previousLastLoadedMessage){
+					const listener = firebase.firestore()
+					.collection(MESSAGE_PATH(room.roomId))
+					.orderBy('timestamp')
+					.startAt(this.lastLoadedMessage)
+					.endAt(this.previousLastLoadedMessage).onSnapshot((querySnapshot) => {
+						this.listenMessages(querySnapshot, room)
+					})
+					this.listeners.push(listener)
+				}
+				else if(this.lastLoadedMessage){
+					const listener = firebase.firestore()
+					.collection(MESSAGE_PATH(room.roomId))
+					.orderBy('timestamp')
+					.startAt(this.lastLoadedMessage).onSnapshot((querySnapshot) => {
+						this.listenMessages(querySnapshot, room)
+					})
+					this.listeners.push(listener)
+
+				}
+				else if(this.previousLastLoadedMessage){
+					const listener = firebase.firestore()
+					.collection(MESSAGE_PATH(room.roomId))
+					.orderBy('timestamp')
+					.endAt(this.previousLastLoadedMessage).onSnapshot((querySnapshot) => {
+						this.listenMessages(querySnapshot, room)
+					})
+					this.listeners.push(listener)
+				}
+				else{
+					const listener = firebase.firestore()
+					.collection(MESSAGE_PATH(room.roomId))
+					.orderBy('timestamp').onSnapshot((querySnapshot) => {
+						this.listenMessages(querySnapshot, room)
+					})
+					this.listeners.push(listener)
+				}
 			})
 
-			}else if(this.messagesPerPage){
+			}
+			else if(this.messagesPerPage){
 			
 			const query = firebase.firestore()
 			.collection(MESSAGE_PATH(room.roomId))
@@ -443,7 +472,7 @@
 				if(this.lastLoadedMessage && this.previousLastLoadedMessage){
 					const listener = firebase.firestore()
 					.collection(MESSAGE_PATH(room.roomId))
-					.orderBy('timestamp', 'desc')
+					.orderBy('timestamp')
 					.startAt(this.lastLoadedMessage)
 					.endAt(this.previousLastLoadedMessage).onSnapshot((querySnapshot) => {
 						this.listenMessages(querySnapshot, room)
@@ -453,7 +482,7 @@
 				else if(this.lastLoadedMessage){
 					const listener = firebase.firestore()
 					.collection(MESSAGE_PATH(room.roomId))
-					.orderBy('timestamp', 'desc')
+					.orderBy('timestamp')
 					.startAt(this.lastLoadedMessage).onSnapshot((querySnapshot) => {
 						this.listenMessages(querySnapshot, room)
 					})
@@ -463,7 +492,7 @@
 				else if(this.previousLastLoadedMessage){
 					const listener = firebase.firestore()
 					.collection(MESSAGE_PATH(room.roomId))
-					.orderBy('timestamp', 'desc')
+					.orderBy('timestamp')
 					.endAt(this.previousLastLoadedMessage).onSnapshot((querySnapshot) => {
 						this.listenMessages(querySnapshot, room)
 					})
@@ -472,14 +501,14 @@
 				else{
 					const listener = firebase.firestore()
 					.collection(MESSAGE_PATH(room.roomId))
-					.orderBy('timestamp', 'desc').onSnapshot((querySnapshot) => {
+					.orderBy('timestamp').onSnapshot((querySnapshot) => {
 						this.listenMessages(querySnapshot, room)
 					})
 					this.listeners.push(listener)
 				}
 			})
-			
-			}else{
+			}
+			else{
 			const query = firebase.firestore()
 			.collection(MESSAGE_PATH(room.roomId))
 			.get()
@@ -503,7 +532,7 @@
 				if(this.lastLoadedMessage && this.previousLastLoadedMessage){
 					const listener = firebase.firestore()
 					.collection(MESSAGE_PATH(room.roomId))
-					.orderBy('timestamp', 'desc')
+					.orderBy('timestamp')
 					.startAt(this.lastLoadedMessage)
 					.endAt(this.previousLastLoadedMessage)
 					.onSnapshot((querySnapshot) => {
@@ -514,7 +543,7 @@
 				else if(this.lastLoadedMessage){
 					const listener = firebase.firestore()
 					.collection(MESSAGE_PATH(room.roomId))
-					.orderBy('timestamp', 'desc')
+					.orderBy('timestamp')
 					.startAt(this.lastLoadedMessage)
 					.onSnapshot((querySnapshot) => {
 						this.listenMessages(querySnapshot, room)
@@ -524,7 +553,7 @@
 				else if(this.previousLastLoadedMessage){
 					const listener = firebase.firestore()
 					.collection(MESSAGE_PATH(room.roomId))
-					.orderBy('timestamp', 'desc')
+					.orderBy('timestamp')
 					.endAt(this.previousLastLoadedMessage)
 					.onSnapshot((querySnapshot) => {
 						this.listenMessages(querySnapshot, room)
@@ -533,7 +562,7 @@
 				}else{
 					const listener = firebase.firestore()
 					.collection(MESSAGE_PATH(room.roomId))
-					.orderBy('timestamp', 'desc')
+					.orderBy('timestamp')
 					.onSnapshot((querySnapshot) => {
 						this.listenMessages(querySnapshot, room)
 					})
@@ -546,6 +575,7 @@
 			messages.forEach(message => {
 				const formattedMessage = this.formatMessage(room, message)
 				const messageIndex = this.messages.findIndex(m => m._id === message.id)
+				
 				if (messageIndex === -1) {
 					this.messages = this.messages.concat([formattedMessage])
 				} else {
@@ -626,7 +656,9 @@
 				}
 			}
 
-			const { id } = await firebase.firestore().collection(MESSAGE_PATH(roomId)).add(message)
+			const { id } = await firebase.firestore().collection(MESSAGE_PATH(roomId)).doc()
+			console.log(id)
+			await firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(id).set(message)
 			
 			if (files) {
 				for (let index = 0; index < files.length; index++) {

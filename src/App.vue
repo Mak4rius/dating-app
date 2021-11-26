@@ -3,7 +3,8 @@
 	<NavigationBar />
 	<NavigationDrawer />
     <v-main>
-           <router-view></router-view>
+           <router-view> 
+		   </router-view>
     </v-main>
 	<Footer/>
   </v-app>
@@ -19,7 +20,7 @@ export default {
   components: {
 		NavigationBar,
 		Footer,
-		NavigationDrawer
+		NavigationDrawer,
     },
     data: () => ({
         items: [

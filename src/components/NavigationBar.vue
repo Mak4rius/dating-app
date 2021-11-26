@@ -3,7 +3,7 @@
     <v-card-title class="text-center justify-center py-6">
 	      <p class="text-h2" text-color="white">
         	<vue-typer
-			:text='["Эскорт и Знакомства "]'
+			:text='["Version"]'
 			:repeat='0'
 			:shuffle='false'
 			initial-action='typing'
@@ -37,16 +37,30 @@
 		:to="item.link"
       >
         {{ item.title }}
+	      <v-badge
+		  :content="messages"
+          :value="messages"
+		  color="indigo darken-2"
+		  inline
+		  v-if="item.title === 'Диалоги'"
+     	>
 		<v-icon>mdi-{{item.icon}}</v-icon>
+		</v-badge>
+		<v-icon v-if="item.title != 'Диалоги'">mdi-{{item.icon}}</v-icon>
       </v-tab>
     </v-tabs>
   	</v-card>
 </template>
 
 <script>
-module.exports = {
+
+import firebase from 'firebase'
+
+export default {
 	data(){
 		return{
+			messages: 0,
+			listeners: [],
 			range: [18, 70],
     		sex: [ 'Не важно','Мужчину', 'Девушку'],
 				cities: [
@@ -201,7 +215,7 @@ module.exports = {
 ,'Якутск'
 ,'Ялта'
 ,'Ярославль'
-],
+						],
 			tab: null,
 			drawer:false,
 			items: [
@@ -219,12 +233,52 @@ module.exports = {
 			// This function checks if the user is logged in
 			// It used in order to display or not displa
 			return this.$store.getters.checkUser
+		},
+		showNotifications(){
+			if(this.$route.name === 'Диалоги'){
+				return false
+			}else{
+				true
+			}
 		}
 	},
+	mounted() {
+		 setTimeout(() => {this.fetchMessages()}, 1000)
+	},
 	methods: {
-		async logOut(){
+		async logOust(){
 			this.$store.dispatch('logoutUser')
-		}
+		},
+		resetCounter(){
+			this.messages = 0
+		},
+		fetchMessages(){
+
+			this.messages = 0 
+			const ROOMS_PATH = 'chatRooms'
+			const MESSAGES_PATH = 'messages'
+			const MESSAGE_PATH = roomId => {
+					return `${ROOMS_PATH}/${roomId}/${MESSAGES_PATH}`
+				}
+			console.log(this.$route.name)
+			firebase.firestore().collection(ROOMS_PATH).get().then((querySnapshot) => {
+				querySnapshot.forEach(room => {
+					const currentId = this.$store.state.user._id
+					if(currentId === room.data().users[0] || currentId === room.data().users[1]){
+						firebase.firestore().collection(MESSAGE_PATH(room.id)).onSnapshot((messages) => {
+							this.messages = 0
+							messages.forEach(message => {
+								if(message.data().sender_id != currentId){
+									if(!message.data().seen){
+										this.messages = this.messages + 1
+									}
+								}
+							})
+					})
+					}
+				})
+			})
+		},
 	}
 }
 </script>

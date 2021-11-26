@@ -75,14 +75,10 @@
 		removeUserId: '',
 		removeUsers: [],
 		roomActions: [
-			{ name: 'inviteUser', title: 'Invite User' },
-			{ name: 'removeUser', title: 'Remove User' },
-			{ name: 'deleteRoom', title: 'Delete Room' }
+			{ name: 'deleteRoom', title: 'Удалить чат' }
 			],
 		menuActions: [
-			{ name: 'inviteUser', title: 'Invite User' },
-			{ name: 'removeUser', title: 'Remove User' },
-			{ name: 'deleteRoom', title: 'Delete Room' }
+			{ name: 'deleteRoom', title: 'Удалить чат' }
 		],
 		styles: { container: { borderRadius: '4px' } },
 		templatesText: [
@@ -190,7 +186,7 @@
 				Object.keys(roomList).forEach(key => {
 					const room = roomList[key]
 					const roomContacts = room.users.filter(
-						user => user._id !== this.currentUserId
+						user => user._id !== this.$store.state.user._id
 					)
 					room.roomName =
 						roomContacts.map(user => user.username).join(', ') || 'Myself'
@@ -264,7 +260,7 @@
 				Object.keys(roomList).forEach(key => {
 					const room = roomList[key]
 					const roomContacts = room.users.filter(
-						user => user._id !== this.currentUserId
+						user => user._id !== this.$store.state.user._id
 					)
 					room.roomName =
 						roomContacts.map(user => user.username).join(', ') || 'Myself'
@@ -507,6 +503,7 @@
 					this.listeners.push(listener)
 				}
 			})
+
 			}
 			else{
 			const query = firebase.firestore()
@@ -575,7 +572,7 @@
 			messages.forEach(message => {
 				const formattedMessage = this.formatMessage(room, message)
 				const messageIndex = this.messages.findIndex(m => m._id === message.id)
-				
+				console.log('listend messages')
 				if (messageIndex === -1) {
 					this.messages = this.messages.concat([formattedMessage])
 				} else {
@@ -839,17 +836,16 @@
 			const MESSAGE_PATH = roomId => {
 				return `${ROOMS_PATH}/${roomId}/${MESSAGES_PATH}`
 			}
-
-			const room = this.rooms.find(r => r.roomId === roomId)
-
+			
 			if(this.lastLoadedMessage){
 				firebase.firestore().collection(MESSAGE_PATH(roomId))
 				.orderBy('timestamp', 'desc')
 				.limit(this.messagesPerPage)
 				.startAfter(this.lastLoadedMessage)
+				.get()
 				.then((messages) => {
 					messages.forEach(message => {
-						firebase.firestore().collection(MESSAGES_PATH(roomId)).doc(message.id).delete()
+						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete()
 						if (message.data().files) {
 							message.data().files.forEach(file => {
 								//storageService.deleteFile(this.currentUserId, message.id, file)
@@ -857,14 +853,17 @@
 						}
 					})
 				})
+				await firebase.firestore().collection('chatRooms').doc(roomId).delete()
+				this.fetchRooms()
 			}
 			else if(this.messagesPerPage){
 				firebase.firestore().collection(MESSAGE_PATH(roomId))
 				.orderBy('timestamp', 'desc')
 				.limit(this.messagesPerPage)
+				.get()
 				.then((messages) => {
 					messages.forEach(message => {
-						firebase.firestore().collection(MESSAGES_PATH(roomId)).doc(message.id).delete()
+						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete()
 						if (message.data().files) {
 							message.data().files.forEach(file => {
 								storageService.deleteFile(this.$store.state.user._id, message.id, file)
@@ -872,10 +871,12 @@
 						}
 					})
 				})
+				await firebase.firestore().collection('chatRooms').doc(roomId).delete()
+				this.fetchRooms()
 			}else{
-				firebase.firestore().collection(MESSAGE_PATH(roomId)).then((messages) => {
+				firebase.firestore().collection(MESSAGE_PATH(roomId)).get().then((messages) => {
 					messages.forEach(message => {
-						firebase.firestore().collection(MESSAGES_PATH(roomId)).doc(message.id).delete()
+						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete()
 						if (message.data().files) {
 							message.data().files.forEach(file => {
 								storageService.deleteFile(this.$store.state.user._id, message.id, file)
@@ -883,10 +884,12 @@
 						}
 					})
 				})
+							
+				await firebase.firestore().collection('chatRooms').doc(roomId).delete()
+				this.fetchRooms()
 			}
 
-			await firebase.firestore().collection('chatRooms').doc(roomId).delete()
-			this.fetchRooms()
+
 		},
 		resetForms() {
 			this.disableForm = false

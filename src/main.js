@@ -9,6 +9,7 @@ import Chat from 'vue-beautiful-chat'
 import Vuex from 'vuex'
 import VueCardCarousel from "vue-card-carousel"
 import { Ripple } from 'vuetify/lib/directives'
+import FlatSurfaceShader from 'vue-flat-surface-shader'
 
 
 
@@ -16,6 +17,7 @@ Vue.use(Chat)
 
 Vue.use(VueTyperPlugin)
 Vue.use(VueCardCarousel)
+Vue.use(FlatSurfaceShader)
 Vue.config.productionTip = false
 
 new Vue({

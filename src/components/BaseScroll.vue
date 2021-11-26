@@ -28,7 +28,7 @@
 			:weight="user.weight"
 			:photos="user.photos"
 			/>
-
+		
   		</v-col>
   		</v-row>
  		</v-container>

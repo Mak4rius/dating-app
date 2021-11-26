@@ -18,6 +18,26 @@
 			:menu-actions="menuActions"
 			:room-message="roomMessage"
 			:templates-text="templatesText"
+			:show-add-room='false'
+			:messageActions="[
+				{
+					name: 'replyMessage',
+					title: 'Ответить'
+				}
+				]"
+			:text-messages="{
+				ROOMS_EMPTY: 'Нет диалогов',
+				ROOM_EMPTY: 'Диалог не выбран',
+				NEW_MESSAGES: 'Новые сообщения',
+				MESSAGE_DELETED: 'Это сообщение было удалено',
+				MESSAGES_EMPTY: 'Нет сообщений',
+				CONVERSATION_STARTED: 'Диалог начался :',
+				TYPE_MESSAGE: 'Сообщение...',
+				SEARCH: 'Поиск',
+				IS_ONLINE: 'онлайн',
+				LAST_SEEN: 'Был онлайн ',
+				IS_TYPING: 'печатает...'
+				}"
 			@fetch-more-rooms="fetchMoreRooms"
 			@fetch-messages="fetchMessages"
 			@send-message="sendMessage"

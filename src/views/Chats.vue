@@ -738,10 +738,6 @@
 		},
 		menuActionHandler({ action, roomId }) {
 			switch (action.name) {
-				case 'inviteUser':
-					return this.inviteUser(roomId)
-				case 'removeUser':
-					return this.removeUser(roomId)
 				case 'deleteRoom':
 					return this.deleteRoom(roomId)
 			}
@@ -853,59 +849,63 @@
 		async deleteRoom(roomId) {
 			const ROOMS_PATH = 'chatRooms'
 			const MESSAGES_PATH = 'messages'
-			const MESSAGE_PATH = roomId => {
-				return `${ROOMS_PATH}/${roomId}/${MESSAGES_PATH}`
+			const MESSAGE_PATH = room_id => {
+				return `${ROOMS_PATH}/${room_id}/${MESSAGES_PATH}`
 			}
 			
 			if(this.lastLoadedMessage){
 				firebase.firestore().collection(MESSAGE_PATH(roomId))
-				.orderBy('timestamp', 'desc')
+				.orderBy('timestamp')
 				.limit(this.messagesPerPage)
 				.startAfter(this.lastLoadedMessage)
 				.get()
 				.then((messages) => {
-					messages.forEach(message => {
-						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete()
-						if (message.data().files) {
-							message.data().files.forEach(file => {
-								//storageService.deleteFile(this.currentUserId, message.id, file)
-							})
-						}
+					messages.forEach((message) => {
+						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete().then(() => {
+							console.log("Document successfully deleted!")
+						}).catch((error) => {
+							console.error("Error removing document: ", error)
+						})
 					})
 				})
+				
 				await firebase.firestore().collection('chatRooms').doc(roomId).delete()
+
 				this.fetchRooms()
 			}
 			else if(this.messagesPerPage){
 				firebase.firestore().collection(MESSAGE_PATH(roomId))
-				.orderBy('timestamp', 'desc')
+				.orderBy('timestamp')
 				.limit(this.messagesPerPage)
 				.get()
 				.then((messages) => {
-					messages.forEach(message => {
-						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete()
-						if (message.data().files) {
-							message.data().files.forEach(file => {
-								storageService.deleteFile(this.$store.state.user._id, message.id, file)
-							})
-						}
+					messages.forEach((message) => {
+						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete().then(() => {
+							console.log("Document successfully deleted!")
+						}).catch((error) => {
+							console.error("Error removing document: ", error)
+						})
 					})
 				})
+				
 				await firebase.firestore().collection('chatRooms').doc(roomId).delete()
+
 				this.fetchRooms()
-			}else{
-				firebase.firestore().collection(MESSAGE_PATH(roomId)).get().then((messages) => {
-					messages.forEach(message => {
-						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete()
-						if (message.data().files) {
-							message.data().files.forEach(file => {
-								storageService.deleteFile(this.$store.state.user._id, message.id, file)
-							})
-						}
+			}
+			else{
+				firebase.firestore().collection(MESSAGE_PATH(roomId))
+				.get().then((messages) => {
+					messages.forEach((message) => {
+						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete().then(() => {
+							console.log("Document successfully deleted!")
+						}).catch((error) => {
+							console.error("Error removing document: ", error)
+						})
 					})
 				})
 							
 				await firebase.firestore().collection('chatRooms').doc(roomId).delete()
+
 				this.fetchRooms()
 			}
 

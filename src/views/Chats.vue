@@ -27,7 +27,7 @@
 				]"
 			:text-messages="{
 				ROOMS_EMPTY: 'Нет диалогов',
-				ROOM_EMPTY: 'Диалог не выбран',
+				ROOM_EMPTY: 'Используйте поиск чтобы найти партнера, и напишите ему.',
 				NEW_MESSAGES: 'Новые сообщения',
 				MESSAGE_DELETED: 'Это сообщение было удалено',
 				MESSAGES_EMPTY: 'Нет сообщений',

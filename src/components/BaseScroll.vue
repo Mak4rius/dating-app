@@ -20,9 +20,9 @@
 
 			<UserCard 
 			:_id="user._id"
-			:name="user.username" 
-			:age="user.age" 
+			:username="user.username" 
 			:city="user.city" 
+			:age="user.age" 
 			:sex="user.sex" 
 			:height="user.height" 
 			:weight="user.weight"

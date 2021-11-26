@@ -27,7 +27,7 @@
         >
 			<UserCard
 			:id="this.$store.state.user.id"
-			:name="this.$store.state.user.name"
+			:username="this.$store.state.user.name"
 			:city="this.$store.state.user.city"
 			:age="this.$store.state.user.age"
 			:sex="this.$store.state.user.sex"

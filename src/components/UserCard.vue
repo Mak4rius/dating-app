@@ -21,7 +21,7 @@
     ></v-carousel-item>
   </v-carousel>
 
-    <v-card-title >{{username}}</v-card-title>
+    <v-card-title > {{username}} </v-card-title>
 
     <v-divider class="mx-4 white"></v-divider>
 

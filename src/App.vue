@@ -14,6 +14,7 @@
 import NavigationBar from './components/NavigationBar'
 import Footer from './components/Footer'
 import NavigationDrawer from './components/NavigationDrawer.vue'
+import firebase from 'firebase'
 
 export default {
   name: 'App',
@@ -21,6 +22,11 @@ export default {
 		NavigationBar,
 		Footer,
 		NavigationDrawer,
+    },
+	created () {    
+
+        window.addEventListener('beforeunload', 
+		firebase.firestore().collection('users').doc(this.$store.state.user._id).update({online:false}))  
     },
     data: () => ({
         items: [

@@ -371,7 +371,6 @@ export default {
 				.then(() => {
 					console.log('LOGGED IN!')
 					console.log(this.$store.state.user)
-					this.$forceUpdate()
 					this.$router.push('/profile')
 				})
 				.catch(err => {

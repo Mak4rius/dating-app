@@ -364,7 +364,72 @@
 		//------------------------------------------------------------------------------
 		//	 Simple search based on city, sex, online status, and presence of whatsup
 		async sortingWhatsupOnSearch(sex, city, lowerBound, upperBound, online){
+			if(online){
 
+				var sexOption = (sex === 'Девушку') ? '1' : '0'
+
+				firebase.firestore().collection('users')
+				.where('city','==',city)
+				.where('sex','==', sexOption)
+				.where('age','>=',lowerBound)
+				.where('age','<=',upperBound)
+				.where('online','==',true)
+				.orderBy('age', 'asc')
+				.get().then((querySnapshot) => {
+					querySnapshot.forEach((doc)=> {
+					if(doc.data().whatsup != "None"){
+						const data = {
+							id: doc.data()._id,
+							name: doc.data().username,
+							age: doc.data().age,
+							city: doc.data().city,
+							sex: doc.data().sex, 
+							height: doc.data().height,
+							weight: doc.data().weight,
+							telegram: doc.data().telegram,
+							whatsup: doc.data().whatsup,
+							phone: doc.data().phone,
+							photos: doc.data().photos,
+							online: doc.data().online,
+							lastChanged: doc.data().lastChanged
+						}
+						this.user_list.push(data)
+						}
+					})
+				})
+			}
+			else{
+				var sexOption = (sex === 'Девушку') ? '1' : '0'
+
+				firebase.firestore().collection('users')
+				.where('city','==',city)
+				.where('sex','==', sexOption)
+				.where('age','>=',lowerBound)
+				.where('age','<=',upperBound)
+				.orderBy('age', 'asc')
+				.get().then((querySnapshot) => {
+					querySnapshot.forEach((doc)=> {
+					if(doc.data().whatsup != "None"){
+						const data = {
+							id: doc.data()._id,
+							name: doc.data().username,
+							age: doc.data().age,
+							city: doc.data().city,
+							sex: doc.data().sex, 
+							height: doc.data().height,
+							weight: doc.data().weight,
+							telegram: doc.data().telegram,
+							whatsup: doc.data().whatsup,
+							phone: doc.data().phone,
+							photos: doc.data().photos,
+							online: doc.data().online,
+							lastChanged: doc.data().lastChanged
+						}
+						this.user_list.push(data)
+						}
+					})
+				})
+			}
 		},
 		async sortingWhatsupOnScroll(sex, city, lowerBound, uppperBound, online){
 		
@@ -373,7 +438,72 @@
 		//------------------------------------------------------------------------------
 		//	 Simple search based on presence of all social networks and online status.
 		async sortingSocialNetworksOnSearch(sex, city, lowerBound, upperBound, online){
+			if(online){
 
+				var sexOption = (sex === 'Девушку') ? '1' : '0'
+
+				firebase.firestore().collection('users')
+				.where('city','==',city)
+				.where('sex','==', sexOption)
+				.where('age','>=',lowerBound)
+				.where('age','<=',upperBound)
+				.where('online','==',true)
+				.orderBy('age', 'asc')
+				.get().then((querySnapshot) => {
+					querySnapshot.forEach((doc)=> {
+					if(doc.data().telegram != "None" && doc.data().whatsup != "None"){
+						const data = {
+							id: doc.data()._id,
+							name: doc.data().username,
+							age: doc.data().age,
+							city: doc.data().city,
+							sex: doc.data().sex, 
+							height: doc.data().height,
+							weight: doc.data().weight,
+							telegram: doc.data().telegram,
+							whatsup: doc.data().whatsup,
+							phone: doc.data().phone,
+							photos: doc.data().photos,
+							online: doc.data().online,
+							lastChanged: doc.data().lastChanged
+						}
+						this.user_list.push(data)
+						}
+					})
+				})
+			}
+			else{
+				var sexOption = (sex === 'Девушку') ? '1' : '0'
+
+				firebase.firestore().collection('users')
+				.where('city','==',city)
+				.where('sex','==', sexOption)
+				.where('age','>=',lowerBound)
+				.where('age','<=',upperBound)
+				.orderBy('age', 'asc')
+				.get().then((querySnapshot) => {
+					querySnapshot.forEach((doc)=> {
+					if(doc.data().telegram != "None" && doc.data().whatsup != "None"){
+						const data = {
+							id: doc.data()._id,
+							name: doc.data().username,
+							age: doc.data().age,
+							city: doc.data().city,
+							sex: doc.data().sex, 
+							height: doc.data().height,
+							weight: doc.data().weight,
+							telegram: doc.data().telegram,
+							whatsup: doc.data().whatsup,
+							phone: doc.data().phone,
+							photos: doc.data().photos,
+							online: doc.data().online,
+							lastChanged: doc.data().lastChanged
+						}
+						this.user_list.push(data)
+						}
+					})
+				})
+			}
 		},
 		async sortingSocialNetworksOnScroll(sex, city, lowerBound, upperBound, online){
 
@@ -382,9 +512,38 @@
 		//------------------------------------------------------------------------------
 		//	 Simple search based on online status
 		async sortingOnlineOnSearch(sex, city, lowerBound, upperBound, online){
+				
+				var sexOption = (sex === 'Девушку') ? '1' : '0'
 
+				firebase.firestore().collection('users')
+				.where('city','==',city)
+				.where('sex','==', sexOption)
+				.where('age','>=',lowerBound)
+				.where('age','<=',upperBound)
+				.where('online','==',true)
+				.orderBy('age', 'asc')
+				.get().then((querySnapshot) => {
+					querySnapshot.forEach((doc)=> {
+						const data = {
+							id: doc.data()._id,
+							name: doc.data().username,
+							age: doc.data().age,
+							city: doc.data().city,
+							sex: doc.data().sex, 
+							height: doc.data().height,
+							weight: doc.data().weight,
+							telegram: doc.data().telegram,
+							whatsup: doc.data().whatsup,
+							phone: doc.data().phone,
+							photos: doc.data().photos,
+							online: doc.data().online,
+							lastChanged: doc.data().lastChanged
+						}
+						this.user_list.push(data)
+					})
+				})
 		},
-		async sortingOnlineOnSearch(){
+		async sortingOnlineOnScroll(){
 
 		}
 

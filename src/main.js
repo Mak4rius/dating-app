@@ -9,17 +9,17 @@ import Chat from 'vue-beautiful-chat'
 import Vuex from 'vuex'
 import VueCardCarousel from "vue-card-carousel"
 import FlatSurfaceShader from 'vue-flat-surface-shader'
+import VueOnlineProp from "vue-online-prop"
 
 
-
+Vue.use(VueOnlineProp)
 Vue.use(Chat)
-
 Vue.use(VueTyperPlugin)
 Vue.use(VueCardCarousel)
 Vue.use(FlatSurfaceShader)
 Vue.config.productionTip = false
 
-new Vue({
+var vm = new Vue({
 	router,
 	store,
 	vuetify,

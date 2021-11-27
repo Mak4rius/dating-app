@@ -3,7 +3,7 @@
     <v-card-title class="text-center justify-center py-6">
 	      <p class="text-h2" text-color="white">
         	<vue-typer
-			:text='["Version"]'
+			:text='[" Эскорт и знакомства "]'
 			:repeat='0'
 			:shuffle='false'
 			initial-action='typing'
@@ -19,7 +19,7 @@
 	<v-img
   max-height="100"
   max-width="100"
-  class="mb-3 ml-2"
+  class="mb-4 ml-4"
   src="../assets/mac1024.png"
 ></v-img>
     </v-card-title>
@@ -244,6 +244,9 @@ export default {
 	},
 	mounted() {
 		 setTimeout(() => {this.fetchMessages()}, 1000)
+	},
+	updated(){
+		 setTimeout(() => {this.fetchMessages()}, 50000)
 	},
 	methods: {
 		async logOust(){

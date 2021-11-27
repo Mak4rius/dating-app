@@ -24,19 +24,23 @@
                     tag="h1"
                   >
                     <span
-                    :class="[$vuetify.breakpoint.smAndDown ? 'display-1' : 'display-2']"
-                      class="font-weight-light"
+                      :class="[$vuetify.breakpoint.smAndDown ? 'display-3': 'display-4']"
+                      class="font-weight-black"
                     >
+					<p class="text-left">
                       WELCOME TO
+					</p>
                     </span>
 
                     <br>
 
                     <span
-                      :class="[$vuetify.breakpoint.smAndDown ? 'display-3': 'display-4']"
+                      :class="[$vuetify.breakpoint.smAndDown ? 'display-3': 'display-4'] "
                       class="font-weight-black"
                     >
+					<p class="text-left">
                       VUETIFY
+					</p>
                     </span>
 
                   </v-col>

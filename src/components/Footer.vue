@@ -9,7 +9,7 @@
         cols="12"
       >
 	        <div class="body-1 white--text pt-6 pt-md-0 text-center">
-            &copy; 2020, сделано с
+            &copy; 2021, сделано с
             <v-icon size="18">
               mdi-heart
             </v-icon>

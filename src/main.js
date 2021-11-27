@@ -8,7 +8,6 @@ import VueTyperPlugin from 'vue-typer'
 import Chat from 'vue-beautiful-chat'
 import Vuex from 'vuex'
 import VueCardCarousel from "vue-card-carousel"
-import { Ripple } from 'vuetify/lib/directives'
 import FlatSurfaceShader from 'vue-flat-surface-shader'
 
 

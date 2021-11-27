@@ -1,7 +1,5 @@
 <template>
 		<v-card 
-		height="100vh"
-		fluid
 		class="mx-auto">
 
 		<chat-window

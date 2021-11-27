@@ -144,6 +144,9 @@
 	selectedCity: 'Москва', 
 	lowerBound: '18',
 	upperBound: '28',
+	telegram: false,
+	whatsup: false,
+	online: false,
     sex: [ 'Не важно','Мужчину', 'Девушку'],
 	cities: [
 'Абакан'
@@ -310,7 +313,11 @@
 			this.selectedSex,
 			this.selectedCity, 
 			lowerBound, 
-			upperBound)
+			upperBound,
+			this.telegram,
+			this.whatsup,
+			this.online
+			)
 		}
 	}
   }

@@ -107,7 +107,69 @@
 	></v-text-field>
 	</template>
 	</v-range-slider>
-</v-col>
+	</v-col>
+  </v-row>
+  
+  <v-row cols='12' >
+
+		  	<v-chip
+			color="indigo"
+			class="ml-3 mt-2"
+			text
+			large
+			text-color="white"
+			>
+			<h1>Дополнительные настройки :</h1>
+			</v-chip>
+
+		  	<v-chip
+			class="ml-4 mt-2"
+			color="indigo"
+			text
+			label
+			large
+			text-color="white"
+			>
+		    <v-switch
+		      inset
+              v-model="whatsup"
+              label="Наличие What's App"
+              color="indigo darken-3"
+            ></v-switch>
+    		</v-chip>
+
+		  	<v-chip
+			color="indigo"
+			class="ml-3 mt-2"
+			text
+			label
+			text-color="white"
+			large
+			>
+		    <v-switch
+		      inset
+              v-model="telegram"
+              label="Наличие Telegram"
+              color="indigo darken-3"
+            ></v-switch>
+    		</v-chip>
+
+		  	<v-chip
+			color="indigo"
+			text
+			dark
+			class="ml-3 mt-2"
+			label
+			text-color="white"
+			large
+			>
+		    <v-switch
+			  inset
+              v-model="online"
+              label="Показать, кто сейчас на сайте ?"
+              color="indigo darken-3"
+            ></v-switch>
+    		</v-chip>
 
   </v-row>
 
@@ -309,6 +371,7 @@
 			console.log("first age", this.range[0]+1)
 			var lowerBound = this.range[0]
 			var upperBound = this.range[1]
+			console.log(this.telegram)
 			this.$root.$emit('changeSearch', 
 			this.selectedSex,
 			this.selectedCity, 

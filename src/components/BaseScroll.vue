@@ -52,7 +52,7 @@
           { title: 'About', icon: 'mdi-forum' },
         ],
 		lastUser: null,
-		option: 4,
+		option: 5,
 		userLimit: 10,
 		// Parameters required to be known for a succesful search 
 		//------------------------------------------------------------------------------
@@ -122,21 +122,32 @@
 
 			this.userList = []
 			
-			if(!(telegram && whatsup)){
-				this.option = 0
-				this.sortingOnSearch(sex, city, lowerBound, upperBound)
-			}
-			else if(telegram && whatsup){
+			console.log(telegram)
+			console.log(whatsup)
+			if(telegram && whatsup){
 				this.option = 1
+				console.log('social networks')
 				this.sortingSocialNetworksOnSearch(sex, city, lowerBound, upperBound, online)
 			}
 			else if(telegram){
 				this.option = 2
+				console.log('telegram network')
 				this.sortingTelegramOnSearch(sex, city, lowerBound, upperBound, online)
 			}
 			else if(whatsup){
 				this.option = 3
+				console.log('whatsup')
 				this.sortingWhatsupOnSearch(sex, city, lowerBound, upperBound, online)
+			}else{
+				if(online){
+					console.log('no social networks, but online')
+					this.option = 4
+					this.sortingOnlineOnSearch(sex, city, lowerBound, upperBound, online)				
+				}else{
+					console.log('no social networks, but offline')
+					this.option = 0
+					this.sortingOnSearch(sex, city, lowerBound, upperBound)
+				}
 			}
 		})
 	},
@@ -167,6 +178,9 @@
 					case 3:
 						//sortingWhastupOnSearch
 						this.sortingWhatsupOnScroll()
+					case 4:
+						// sortin OnlineOnSearch
+						this.sortingOnlineOnScroll()
 
 					default:
 						this.searchOnScroll()

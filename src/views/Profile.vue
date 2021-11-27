@@ -1,4 +1,10 @@
 <template>
+  <v-card
+  	color="rgb(255, 0, 0, 0)"
+    class="overflow-y-auto mx-auto"
+	height="100%"
+	elevation="0"
+	width="100%">
   <v-container
     id="user-profile"
     fluid
@@ -19,7 +25,7 @@
       <v-col
         cols="12"
         md="4"
-		class="align-center justify-center ml-13"
+		class="align-center justify-center ml-0"
       >
         <base-material-card
           class="v-card-profile"
@@ -27,7 +33,7 @@
         >
 			<UserCard
 			:id="this.$store.state.user.id"
-			:username="this.$store.state.user.name"
+			:name="this.$store.state.user.name"
 			:city="this.$store.state.user.city"
 			:age="this.$store.state.user.age"
 			:sex="this.$store.state.user.sex"
@@ -39,6 +45,7 @@
       </v-col>
     </v-row>
   </v-container>
+  </v-card>
 </template>
 
 <script>

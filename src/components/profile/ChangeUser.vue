@@ -28,7 +28,7 @@
           <v-container>
             <v-row>
               <v-col cols="6" >
-			  <v-text-field v-model="name" :rules="[rules.required]" label="Имя" maxlength="20" required></v-text-field>
+			  <v-text-field v-model="username" :rules="[rules.required]" label="Имя" maxlength="20" required></v-text-field>
 			  </v-col>
 			  <v-radio-group
 					v-model="radios"
@@ -180,7 +180,7 @@ import firebase from "firebase"
 	},
     data: () => ({
       dialog: false,
-	  name: "",
+	  username: "",
 	  age: "",
 	  city:"",
 	  height: "",

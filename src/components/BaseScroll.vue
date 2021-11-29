@@ -121,7 +121,7 @@
 			this.whatsup = whatsup
 			this.online = online
 
-			this.lastUser = null
+			this.lastUser = null 
 			this.userList = []
 			
 			console.log(telegram)
@@ -240,7 +240,7 @@
 
 					users.forEach((user)=> {
 					const data = {
-						id: user.data()._id,
+						_id: user.data()._id,
 						username: user.data().username,
 						age: user.data().age,
 						city: user.data().city,
@@ -273,7 +273,7 @@
 						users.forEach((user)=> {
 
 						const data = {
-							id: user.data()._id,
+							_id: user.data()._id,
 							username: user.data().username,
 							age: user.data().age,
 							city: user.data().city,
@@ -313,7 +313,7 @@
 					console.log('We dont add new users no more')
 					}else{
 						const data = {
-							id: user.data()._id,
+							_id: user.data()._id,
 							username: user.data().username,
 							age: user.data().age,
 							city: user.data().city,
@@ -352,7 +352,7 @@
 					}
 				else{
 					const data = {
-						id: user.data()._id,
+						_id: user.data()._id,
 						username: user.data().username,
 						age: user.data().age,
 						city: user.data().city,
@@ -371,7 +371,7 @@
 				}
 				})
 				if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
+					this.lastUser = users.docs[users.docs.length - 1]
 				}
 			  })
 			}
@@ -396,7 +396,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -437,7 +437,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -477,7 +477,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -517,7 +517,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -561,7 +561,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -603,7 +603,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -626,47 +626,6 @@
 						}
 					})
 				}
-				var sexOption = (this.sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',this.city)
-				.where('sex','==', sexOption)
-				.where('age','>=',this.lowerBound)
-				.where('age','<=',this.upperBound)
-				.where('online','==',true)
-				.orderBy('age', 'asc')
-				.startAfter(this.lastUser)
-				.limit(this.userLimit)
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().telegram != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
-							}
-							this.userList.push(data)
-						}				
-						}
-					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
 			}
 			else{
 				if(this.sex === 'Не важно'){
@@ -685,7 +644,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -726,7 +685,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -771,7 +730,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -811,7 +770,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -850,7 +809,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -889,7 +848,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -935,7 +894,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -977,7 +936,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1018,7 +977,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1059,7 +1018,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1103,7 +1062,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1142,7 +1101,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1181,7 +1140,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1220,7 +1179,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1265,7 +1224,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1306,7 +1265,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1348,7 +1307,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1389,7 +1348,7 @@
 							}
 							else{		
 								const data = {
-									id: user.data()._id,
+									_id: user.data()._id,
 									username: user.data().username,
 									age: user.data().age,
 									city: user.data().city,
@@ -1450,7 +1409,6 @@
 						this.lastUser = users.docs[users.docs.length - 1]
 					}
 				})
-
 				}else{
 				var sexOption = (sex === 'Девушку') ? '1' : '0'
 
@@ -1505,7 +1463,7 @@
 									console.log('We dont add new users no more')
 							}else{
 								const data = {
-								id: user.data()._id,
+								_id: user.data()._id,
 								username: user.data().username,
 								age: user.data().age,
 								city: user.data().city,
@@ -1544,7 +1502,7 @@
 									console.log('We dont add new users no more')
 							}else{
 								const data = {
-								id: user.data()._id,
+								_id: user.data()._id,
 								username: user.data().username,
 								age: user.data().age,
 								city: user.data().city,

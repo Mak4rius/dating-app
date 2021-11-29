@@ -79,6 +79,7 @@
 										<v-radio-group
 										v-model="radios"
 										row
+										:rules="[rules.required]"
 										>
 										<v-col cols="12" sm="6" md="6">
 										<v-radio
@@ -123,6 +124,8 @@
 										<v-select
 											:items="cities"
 											v-model="hometown"
+											:rules="[rules.required]"
+											required
 											label="Выберите ваш город:"
 										>
 											<template v-slot:item="{ item, attrs, on }">
@@ -142,10 +145,7 @@
                                             <v-text-field v-model="email" :rules="emailRules" label="Почта" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Пароль" hint="Минимум 8 символов" @click:append="show1 = !show1"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field block v-model="verify" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, passwordMatch]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Подтвердите пароль" @click:append="show1 = !show1"></v-text-field>
+                                            <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" required :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Пароль" hint="Минимум 8 символов" @click:append="show1 = !show1"></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
                                             <v-btn x-large block :disabled="!valid" color="indigo darken-4" class="white--text"  @click="register">
@@ -330,14 +330,14 @@ export default {
 ,'Ялта'
 ,'Ярославль'
 ],
-    valid: true,
+    valid: false,
 	items: ['Женщина', 'Мужчина'],
     firstName: "",
     age: "",
 	height: "",
 	weight: "",
     email: "",
-	hometown: 'Москва',
+	hometown: "",
     password: "",
     verify: "",
     loginPassword: "",
@@ -372,7 +372,8 @@ export default {
   //		Rejected: meaning that the operation failed
   methods: {
 	  register(){
-		  	  const user = {
+		  	if(this.$refs.registerForm.validate()){
+				const user = {
 					email: this.email,
 					password: this.password,
 					username: this.firstName,
@@ -382,7 +383,7 @@ export default {
 					height: parseInt(this.height),
 					weight: parseInt(this.weight)
 				}
-		  	  this.$store.dispatch('registerUser', 
+				this.$store.dispatch('registerUser', 
 				user)
 				.then(() => {
 					console.log('REGISTER!')
@@ -393,24 +394,25 @@ export default {
 					console.log('NOT REGISTERED!')
 					this.dialog = true
 				})
-
+			  }
 	  },
 	  login(){
-		  const user = {
-			  email: this.loginEmail,
-			  password: this.loginPassword
+		  if(this.$refs.loginForm.validate()){
+				const user = {
+					email: this.loginEmail,
+					password: this.loginPassword
+				}
+				this.$store.dispatch('loginUser', user)
+						.then(() => {
+							console.log('LOGGED IN!')
+							console.log(this.$store.state.user)
+							this.$router.push('/profile')
+						})
+						.catch(err => {
+							console.log('NOT LOGGED IN!')
+							this.dialog = true
+						})
 		  }
-		  this.$store.dispatch('loginUser', user)
-				.then(() => {
-					console.log('LOGGED IN!')
-					console.log(this.$store.state.user)
-					this.$router.push('/profile')
-				})
-				.catch(err => {
-					console.log('NOT LOGGED IN!')
-					this.dialog = true
-				})
-		
 	  }
   },
   computed: {

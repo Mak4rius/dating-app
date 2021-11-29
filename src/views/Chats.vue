@@ -850,49 +850,9 @@
 			const MESSAGE_PATH = room_id => {
 				return `${ROOMS_PATH}/${room_id}/${MESSAGES_PATH}`
 			}
-			
-			if(this.lastLoadedMessage){
-				firebase.firestore().collection(MESSAGE_PATH(roomId))
-				.orderBy('timestamp')
-				.limit(this.messagesPerPage)
-				.startAfter(this.lastLoadedMessage)
-				.get()
-				.then((messages) => {
-					messages.forEach((message) => {
-						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete().then(() => {
-							console.log("Document successfully deleted!")
-						}).catch((error) => {
-							console.error("Error removing document: ", error)
-						})
-					})
-				})
-				
-				await firebase.firestore().collection('chatRooms').doc(roomId).delete()
-
-				this.fetchRooms()
-			}
-			else if(this.messagesPerPage){
-				firebase.firestore().collection(MESSAGE_PATH(roomId))
-				.orderBy('timestamp')
-				.limit(this.messagesPerPage)
-				.get()
-				.then((messages) => {
-					messages.forEach((message) => {
-						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete().then(() => {
-							console.log("Document successfully deleted!")
-						}).catch((error) => {
-							console.error("Error removing document: ", error)
-						})
-					})
-				})
-				
-				await firebase.firestore().collection('chatRooms').doc(roomId).delete()
-
-				this.fetchRooms()
-			}
-			else{
-				firebase.firestore().collection(MESSAGE_PATH(roomId))
-				.get().then((messages) => {
+		
+			firebase.firestore().collection(MESSAGE_PATH(roomId))
+			.get().then((messages) => {
 					messages.forEach((message) => {
 						firebase.firestore().collection(MESSAGE_PATH(roomId)).doc(message.id).delete().then(() => {
 							console.log("Document successfully deleted!")
@@ -902,12 +862,9 @@
 					})
 				})
 							
-				await firebase.firestore().collection('chatRooms').doc(roomId).delete()
+			await firebase.firestore().collection('chatRooms').doc(roomId).delete()
 
-				this.fetchRooms()
-			}
-
-
+			this.fetchRooms()
 		},
 		resetForms() {
 			this.disableForm = false

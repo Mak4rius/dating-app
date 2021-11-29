@@ -31,6 +31,9 @@ export default{
 		},
 		error(state){
 			return state.error
+		},
+		checkUser(state){
+			return state.user
 		}
 	  },
 }

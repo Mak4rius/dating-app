@@ -330,7 +330,7 @@ export default {
 ,'Ялта'
 ,'Ярославль'
 ],
-    valid: false,
+    valid: true,
 	items: ['Женщина', 'Мужчина'],
     firstName: "",
     age: "",

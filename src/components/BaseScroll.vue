@@ -53,7 +53,7 @@
         ],
 		lastUser: null,
 		option: 5,
-		userLimit: 10,
+		userLimit: 3,
 		// Parameters required to be known for a succesful search 
 		//------------------------------------------------------------------------------
 		sex: '',
@@ -112,6 +112,7 @@
 	mounted() {
 		this.$root.$on('changeSearch', (sex, city, lowerBound, upperBound, telegram, whatsup, online) => {
 			
+			console.log('new')
 			this.sex = sex
 			this.city = city 
 			this.lowerBound = lowerBound
@@ -120,6 +121,7 @@
 			this.whatsup = whatsup
 			this.online = online
 
+			this.lastUser = null
 			this.userList = []
 			
 			console.log(telegram)
@@ -142,7 +144,7 @@
 				if(online){
 					console.log('no social networks, but online')
 					this.option = 4
-					this.sortingOnlineOnSearch(sex, city, lowerBound, upperBound, online)				
+					this.sortingOnlineOnSearch(sex, city, lowerBound, upperBound)				
 				}else{
 					console.log('no social networks, but offline')
 					this.option = 0
@@ -156,12 +158,10 @@
 	UserCard,
 	},
 	methods: {
-		onScroll () {
-			window.onscroll = () => {
-			let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
-			this.scrolledToBottom = true
-
-			if (bottomOfWindow) {
+		onScroll ({ target: { scrollTop, clientHeight, scrollHeight, offsetHeight }}) {
+			let bottomOfWindow = Math.max(window.pageYOffset, scrollTop, scrollTop) + window.innerHeight === offsetHeight
+			if ( (scrollTop + clientHeight >= scrollHeight) || (bottomOfWindow)){
+				console.log('scrolled to bottom')
 				switch(this.option){
 					case 0:
 						// usual sortingOnSearch
@@ -185,8 +185,7 @@
 					default:
 						this.searchOnScroll()
 				}
-			  }
-		    }
+			}
     	},
 		async searchOnScroll(){
 			
@@ -228,7 +227,7 @@
 		//------------------------------------------------------------------------------
 		//  Simple search based on city and sex
 		async sortingOnSearch(sex, city, lowerBound, upperBound){
-			if(sex == 'Девушку' || sex == 'Мужчину'){
+			if(sex === 'Девушку' || sex === 'Мужчину'){
 				var sexOption = (sex === 'Девушку') ? '1' : '0'
 				firebase.firestore().collection('users')
 				.where('city','==',city)
@@ -298,7 +297,7 @@
 			}
 		},
 		async sortingOnScroll(){
-			if(this.sex == 'Девушку' || this.sex == 'Мужчину'){
+			if(this.sex === 'Девушку' || this.sex === 'Мужчину'){
 			var sexOption = (this.sex === 'Девушку') ? '1' : '0'
 			firebase.firestore().collection('users')
 			.where('city','==',this.city)
@@ -381,93 +380,252 @@
 		//	 Simple search based on city, sex, online statues, and presence of telegram
 		async sortingTelegramOnSearch(sex, city, lowerBound, upperBound, online){
 			if(online){
-
-				var sexOption = (sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',city)
-				.where('sex','==', sexOption)
-				.where('age','>=',lowerBound)
-				.where('age','<=',upperBound)
-				.where('online','==',true)
-				.orderBy('age', 'asc')
-				.limit(this.userLimit)
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().telegram != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(sex === 'Не важно'){
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}				
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}				
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (sex === 'Девушку') ? '1' : '0'
+
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('sex','==', sexOption)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}				
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 			}
 			else{
-				var sexOption = (sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',city)
-				.where('sex','==', sexOption)
-				.where('age','>=',lowerBound)
-				.where('age','<=',upperBound)
-				.limit(this.userLimit)
-				.orderBy('age', 'asc')
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().telegram != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(sex === 'Не важно'){
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.limit(this.userLimit)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (sex === 'Девушку') ? '1' : '0'
+
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('sex','==', sexOption)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.limit(this.userLimit)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 			}
 		},
 		async sortingTelegramOnScroll(){
 			if(this.online){
+				if(this.sex === 'Не важно'){
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}				
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}else{
+					var sexOption = (this.sex === 'Девушку') ? '1' : '0'
 
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('sex','==', sexOption)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}				
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 				var sexOption = (this.sex === 'Девушку') ? '1' : '0'
 
 				firebase.firestore().collection('users')
@@ -511,414 +669,842 @@
 				})
 			}
 			else{
-				var sexOption = (this.sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',this.city)
-				.where('sex','==', sexOption)
-				.where('age','>=',this.lowerBound)
-				.where('age','<=',this.upperBound)
-				.orderBy('age', 'asc')
-				.startAfter(this.lastUser)
-				.limit(this.userLimit)
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().telegram != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(this.sex === 'Не важно'){
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (this.sex === 'Девушку') ? '1' : '0'
+
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('sex','==', sexOption)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
+
 			}
 		},
 		//------------------------------------------------------------------------------
 		//	 Simple search based on city, sex, online status, and presence of whatsup
 		async sortingWhatsupOnSearch(sex, city, lowerBound, upperBound, online){
 			if(online){
-
-				var sexOption = (sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',city)
-				.where('sex','==', sexOption)
-				.where('age','>=',lowerBound)
-				.where('age','<=',upperBound)
-				.where('online','==',true)
-				.orderBy('age', 'asc')
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().whatsup != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(sex === 'Не важно'){
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (sex === 'Девушку') ? '1' : '0'
+
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('sex','==', sexOption)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 			}
 			else{
-				var sexOption = (sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',city)
-				.where('sex','==', sexOption)
-				.where('age','>=',lowerBound)
-				.where('age','<=',upperBound)
-				.orderBy('age', 'asc')
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().whatsup != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(sex === 'Не важно'){
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (sex === 'Девушку') ? '1' : '0'
+
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('sex','==', sexOption)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 			}
 		},
 		async sortingWhatsupOnScroll(){
 				
 			if(this.online){
+				if(this.sex === 'Не важно'){
 
-				var sexOption = (this.sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',this.city)
-				.where('sex','==', sexOption)
-				.where('age','>=',this.lowerBound)
-				.where('age','<=',this.upperBound)
-				.where('online','==',true)
-				.orderBy('age', 'asc')
-				.startAfter(this.lastUser)
-				.limit(this.userLimit)
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().whatsup != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
+				}else{
+					var sexOption = (this.sex === 'Девушку') ? '1' : '0'
+
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('sex','==', sexOption)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
 					}
-				})
 			}
 			else{
-				var sexOption = (this.sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==', this.city)
-				.where('sex','==', sexOption)
-				.where('age','>=', this.lowerBound)
-				.where('age','<=', this.upperBound)
-				.orderBy('age', 'asc')
-				.startAfter(this.lastUser)
-				.limit(this.userLimit)
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().whatsup != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(this.sex === 'Не важно'){
+					firebase.firestore().collection('users')
+					.where('city','==', this.city)
+					.where('age','>=', this.lowerBound)
+					.where('age','<=', this.upperBound)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (this.sex === 'Девушку') ? '1' : '0'
+
+					firebase.firestore().collection('users')
+					.where('city','==', this.city)
+					.where('sex','==', sexOption)
+					.where('age','>=', this.lowerBound)
+					.where('age','<=', this.upperBound)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 			}
 		},
 		//------------------------------------------------------------------------------
 		//	 Simple search based on presence of all social networks and online status.
 		async sortingSocialNetworksOnSearch(sex, city, lowerBound, upperBound, online){
 			if(online){
-				var sexOption = (sex === 'Девушку') ? '1' : '0'
-				firebase.firestore().collection('users')
-				.where('city','==',city)
-				.where('sex','==', sexOption)
-				.where('age','>=',lowerBound)
-				.where('age','<=',upperBound)
-				.where('online','==',true)
-				.orderBy('age', 'asc')
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().telegram != "None" && user.data().whatsup != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(sex === 'Не важно'){
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None" && user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (sex === 'Девушку') ? '1' : '0'
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('sex','==', sexOption)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None" && user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 			}
 			else{
-				var sexOption = (sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',city)
-				.where('sex','==', sexOption)
-				.where('age','>=',lowerBound)
-				.where('age','<=',upperBound)
-				.orderBy('age', 'asc')
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().telegram != "None" && user.data().whatsup != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(sex === 'Не важно'){
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None" && user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (sex === 'Девушку') ? '1' : '0'
+
+					firebase.firestore().collection('users')
+					.where('city','==',city)
+					.where('sex','==', sexOption)
+					.where('age','>=',lowerBound)
+					.where('age','<=',upperBound)
+					.orderBy('age', 'asc')
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None" && user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 			}
 		},
 		async sortingSocialNetworksOnScroll(){
 			if(this.online){
-				var sexOption = (this.sex === 'Девушку') ? '1' : '0'
-				firebase.firestore().collection('users')
-				.where('city','==',this.city)
-				.where('sex','==', sexOption)
-				.where('age','>=',this.lowerBound)
-				.where('age','<=',this.upperBound)
-				.where('online','==',true)
-				.orderBy('age', 'asc')
-				.startAfter(this.lastUser)
-				.limit(this.userLimit)
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().telegram != "None" && user.data().whatsup != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(this.sex === 'Не важно'){
+
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None" && user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (this.sex === 'Девушку') ? '1' : '0'
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('sex','==', sexOption)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.where('online','==',true)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None" && user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 			}
 			else{
-				var sexOption = (this.sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',this.city)
-				.where('sex','==', sexOption)
-				.where('age','>=',this.lowerBound)
-				.where('age','<=',this.upperBound)
-				.orderBy('age', 'asc')
-				.startAfter(this.lastUser)
-				.limit(this.userLimit)
-				.get().then((users) => {
-					users.forEach((user)=> {
-					if(user.data().telegram != "None" && user.data().whatsup != "None"){
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
-								id: user.data()._id,
-								username: user.data().username,
-								age: user.data().age,
-								city: user.data().city,
-								sex: user.data().sex, 
-								height: user.data().height,
-								weight: user.data().weight,
-								telegram: user.data().telegram,
-								whatsup: user.data().whatsup,
-								phone: user.data().phone,
-								photos: user.data().photos,
-								online: user.data().online,
-								lastChanged: user.data().lastChanged
+				if(this.sex === 'Не важно'){
+					
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None" && user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
 							}
-							this.userList.push(data)
-						}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}else{
+					var sexOption = (this.sex === 'Девушку') ? '1' : '0'
+
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('sex','==', sexOption)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.limit(this.userLimit)
+					.get().then((users) => {
+						users.forEach((user)=> {
+						if(user.data().telegram != "None" && user.data().whatsup != "None"){
+							if(this.lastUser.data()._id === user.data()._id){
+								console.log('We dont add new users no more')
+							}
+							else{		
+								const data = {
+									id: user.data()._id,
+									username: user.data().username,
+									age: user.data().age,
+									city: user.data().city,
+									sex: user.data().sex, 
+									height: user.data().height,
+									weight: user.data().weight,
+									telegram: user.data().telegram,
+									whatsup: user.data().whatsup,
+									phone: user.data().phone,
+									photos: user.data().photos,
+									online: user.data().online,
+									lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+							}
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
+						}
+					})
+				}
 			}
 		},
 		//------------------------------------------------------------------------------
 		//	 Simple search based on online status
-		async sortingOnlineOnSearch(sex, city, lowerBound, upperBound, online){
-				
+		async sortingOnlineOnSearch(sex, city, lowerBound, upperBound){
+				if(sex === 'Не важно'){
+
+				firebase.firestore().collection('users')
+				.where('online', '==', true)
+				.where('city','==',city)
+				.where('age','>=',lowerBound)
+				.where('age','<=',upperBound)
+				.limit(this.userLimit)
+				.orderBy('age', 'asc')
+				.get().then((users) => {
+					console.log(users)
+					users.forEach((user) => {
+								const data = {
+								_id: user.data()._id,
+								username: user.data().username,
+								age: user.data().age,
+								city: user.data().city,
+								sex: user.data().sex, 
+								height: user.data().height,
+								weight: user.data().weight,
+								telegram: user.data().telegram,
+								whatsup: user.data().whatsup,
+								phone: user.data().phone,
+								photos: user.data().photos,
+								online: user.data().online,
+								lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+					})
+					if(users.docs[users.docs.length - 1]){
+						this.lastUser = users.docs[users.docs.length - 1]
+					}
+				})
+
+				}else{
 				var sexOption = (sex === 'Девушку') ? '1' : '0'
 
 				firebase.firestore().collection('users')
+				.where('online', '==', true)
 				.where('city','==',city)
 				.where('sex','==', sexOption)
 				.where('age','>=',lowerBound)
 				.where('age','<=',upperBound)
-				.where('online','==',true)
 				.limit(this.userLimit)
 				.orderBy('age', 'asc')
 				.get().then((users) => {
-					users.forEach((user)=> {
-						if(this.lastUser.data()._id === user.data()._id){
-							console.log('We dont add new users no more')
-						}
-						else{		
-							const data = {
+					console.log(users)
+					users.forEach((user) => {
+								const data = {
+								_id: user.data()._id,
+								username: user.data().username,
+								age: user.data().age,
+								city: user.data().city,
+								sex: user.data().sex, 
+								height: user.data().height,
+								weight: user.data().weight,
+								telegram: user.data().telegram,
+								whatsup: user.data().whatsup,
+								phone: user.data().phone,
+								photos: user.data().photos,
+								online: user.data().online,
+								lastChanged: user.data().lastChanged
+								}
+								this.userList.push(data)
+					})
+					if(users.docs[users.docs.length - 1]){
+						this.lastUser = users.docs[users.docs.length - 1]
+					}
+				})
+				}
+		},
+		async sortingOnlineOnScroll(){
+				if(this.sex === 'Не важно'){
+
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.where('online','==',this.online)
+					.limit(this.userLimit)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.get().then((users) => {
+						users.forEach((user)=> {
+							if(this.lastUser.data()._id === user.data()._id){
+									console.log('We dont add new users no more')
+							}else{
+								const data = {
 								id: user.data()._id,
 								username: user.data().username,
 								age: user.data().age,
@@ -934,53 +1520,52 @@
 								lastChanged: user.data().lastChanged
 							}
 							this.userList.push(data)
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
-		},
-		async sortingOnlineOnScroll(){
+				}else{
+					var sexOption = (this.sex === 'Девушку') ? '1' : '0'
 
-				var sexOption = (this.sex === 'Девушку') ? '1' : '0'
-
-				firebase.firestore().collection('users')
-				.where('city','==',this.city)
-				.where('sex','==', sexOption)
-				.where('age','>=',this.lowerBound)
-				.where('age','<=',this.upperBound)
-				.where('online','==',this.online)
-				.startAfter(this.lastUser)
-				.limit(this.userLimit)
-				.orderBy('age', 'asc')
-				.get().then((users) => {
-					users.forEach((user)=> {
-						if(this.lastUser.data()._id === user.data()._id){
-								console.log('We dont add new users no more')
-						}else{
-							const data = {
-							id: user.data()._id,
-							username: user.data().username,
-							age: user.data().age,
-							city: user.data().city,
-							sex: user.data().sex, 
-							height: user.data().height,
-							weight: user.data().weight,
-							telegram: user.data().telegram,
-							whatsup: user.data().whatsup,
-							phone: user.data().phone,
-							photos: user.data().photos,
-							online: user.data().online,
-							lastChanged: user.data().lastChanged
-						}
-						this.userList.push(data)
+					firebase.firestore().collection('users')
+					.where('city','==',this.city)
+					.where('sex','==', sexOption)
+					.where('age','>=',this.lowerBound)
+					.where('age','<=',this.upperBound)
+					.where('online','==',this.online)
+					.limit(this.userLimit)
+					.orderBy('age', 'asc')
+					.startAfter(this.lastUser)
+					.get().then((users) => {
+						users.forEach((user)=> {
+							if(this.lastUser.data()._id === user.data()._id){
+									console.log('We dont add new users no more')
+							}else{
+								const data = {
+								id: user.data()._id,
+								username: user.data().username,
+								age: user.data().age,
+								city: user.data().city,
+								sex: user.data().sex, 
+								height: user.data().height,
+								weight: user.data().weight,
+								telegram: user.data().telegram,
+								whatsup: user.data().whatsup,
+								phone: user.data().phone,
+								photos: user.data().photos,
+								online: user.data().online,
+								lastChanged: user.data().lastChanged
+							}
+							this.userList.push(data)
+							}
+						})
+						if(users.docs[users.docs.length - 1]){
+							this.lastUser = users.docs[users.docs.length - 1]
 						}
 					})
-					if(users.docs[users.docs.length - 1]){
-						this.lastUser = users.docs[users.docs.length - 1]
-					}
-				})
+				}
 		}
 	}
   }

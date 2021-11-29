@@ -66,7 +66,7 @@
 		v-model="range"
 		class="ma-4"
   		hint="Выберите желаемый возраст партнера"
-  		max="70"
+  		max="98"
   		min="18"
 	>
 	   <template v-slot:prepend>
@@ -201,7 +201,7 @@
 	components: {
 	},
     data: () => ({
-	range: [18, 70],
+	range: [18, 98],
 	selectedSex: 'Не важно',
 	selectedCity: 'Москва', 
 	lowerBound: '18',

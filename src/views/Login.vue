@@ -1,5 +1,28 @@
 <template>
-            <v-card max-width="800px" elevation="24" color="#283593" min-width="360px" outlined height='600px' class="mx-auto mt-10" shaped app>
+    <v-card max-width="800px" elevation="24" color="#283593" min-width="360px" outlined height='600px' fluid class="mx-auto mt-14" shaped app>
+				<v-dialog
+					v-model="dialog"
+					width="280"
+				>
+				<v-card>
+					<v-card-title class="text-h5">
+					Произошла ошибка!
+					</v-card-title>
+
+					<v-card-actions>
+					<v-spacer></v-spacer>
+
+					<v-btn
+						color="indigo darken-4" 
+						class="white--text"
+						block
+						@click="dialog = false"
+					>
+						Ясно
+					</v-btn>
+					</v-card-actions>
+				</v-card>
+				</v-dialog>
                 <v-tabs v-model="tab" show-arrows background-color="rgb(0, 0, 0, 0)" icons-and-text dark grow>
                     <v-tabs-slider color="rgb(0, 0, 0, 0)"></v-tabs-slider>
                     <v-tab v-for="i in tabs" :key="i">
@@ -24,7 +47,7 @@
                                             <v-text-field v-model="loginEmail" :rules="loginEmailRules" label="Почта" required ></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-text-field v-model="loginPassword" :append-icon="show1?'eye':'eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Пароль" hint="Минимум 8 символов" counter @click:append="show1 = !show1"></v-text-field>
+                                            <v-text-field v-model="loginPassword" :append-icon="show1?'eye':'eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Пароль" hint="Минимум 8 символов" @click:append="show1 = !show1"></v-text-field>
                                         </v-col>
 										<v-col cols="12">
 											<v-spacer></v-spacer>
@@ -48,10 +71,10 @@
                                 <v-form ref="registerForm" v-model="valid" lazy-validation>
                                     <v-row dense>
                                         <v-col cols="12" sm="3" md="3">
-                                            <v-text-field v-model="firstName" :rules="[rules.required]" label="Имя" maxlength="20" required></v-text-field>
+                                            <v-text-field v-model="firstName" :rules="userRules" label="Имя" maxlength="20" required></v-text-field>
                                         </v-col>
 										<v-col cols="12" sm="3" md="3">
-                                        <v-text-field v-model="age" :rules="[rules.required]"  type="number" label="Возраст" maxlength="20" required></v-text-field>
+                                        <v-text-field v-model="age" :rules="ageRules"  type="number" label="Возраст" maxlength="20" required></v-text-field>
                                         </v-col>
 										<v-radio-group
 										v-model="radios"
@@ -119,10 +142,10 @@
                                             <v-text-field v-model="email" :rules="emailRules" label="Почта" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Пароль" hint="Минимум 8 символов" counter @click:append="show1 = !show1"></v-text-field>
+                                            <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Пароль" hint="Минимум 8 символов" @click:append="show1 = !show1"></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-text-field block v-model="verify" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, passwordMatch]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Подтвердите пароль" counter @click:append="show1 = !show1"></v-text-field>
+                                            <v-text-field block v-model="verify" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, passwordMatch]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Подтвердите пароль" @click:append="show1 = !show1"></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
                                             <v-btn x-large block :disabled="!valid" color="indigo darken-4" class="white--text"  @click="register">
@@ -147,8 +170,8 @@
 export default {
   name: 'Login',
   data: () => ({
+	dialog: false,
 	radios: null,
-	dialog: true,
     tab: 0,
     tabs: [
         {name:"Логин", icon:"mdi-account"},
@@ -314,23 +337,32 @@ export default {
 	height: "",
 	weight: "",
     email: "",
+	hometown: 'Москва',
     password: "",
     verify: "",
     loginPassword: "",
     loginEmail: "",
     loginEmailRules: [
-      v => !!v || "Required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      v => !!v || "Обязательно",
+      v => /.+@.+\..+/.test(v) || "Правильный формат почты!"
     ],
     emailRules: [
-      v => !!v || "Required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      v => !!v || "Обязательно",
+      v => /.+@.+\..+/.test(v) || "Правильный формат почты!"
     ],
 
     show1: false,
+	userRules: [
+      v => !!v || "Обязательно",
+	  v => /^[а-яА-Я_-]{3,15}$/.test(v) || "имя на русском"
+	],
+	ageRules: [
+      v => !!v || "Обязательно",
+	  v => /^(1[89]|[2-9]\d)$/.test(v) || "возраст"
+	],
     rules: {
-      required: value => !!value || "Required.",
-      min: v => (v && v.length >= 8) || "Min 8 characters"
+      required: value => !!value || "Обязательно.",
+      min: v => (v && v.length >= 8) || "Минимум 8 символов."
     }
   }),
   // Promise is a proxy value not necessarily known when the promis is created
@@ -359,6 +391,7 @@ export default {
 				.catch(err => {
 					console.log(err)
 					console.log('NOT REGISTERED!')
+					this.dialog = true
 				})
 
 	  },
@@ -375,6 +408,7 @@ export default {
 				})
 				.catch(err => {
 					console.log('NOT LOGGED IN!')
+					this.dialog = true
 				})
 		
 	  }

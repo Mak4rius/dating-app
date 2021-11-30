@@ -3,7 +3,7 @@
     <v-card-title class="text-center justify-center py-6">
 	      <p class="text-h2" text-color="white">
         	<vue-typer
-			:text='[" Эскорт и знакомства "]'
+			:text='[" Les Courtisans "]'
 			:repeat='0'
 			:shuffle='false'
 			initial-action='typing'

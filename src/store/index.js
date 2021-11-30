@@ -38,7 +38,6 @@ export default new Vuex.Store({
 			console.log(e)
 		}
 	},
-
 	async registerUser({commit}, {email, password, username, age, city, sex, height, weight}){
 		/**
 		 * This function register a user, and pass all the information about the user in the local storage.
@@ -117,13 +116,11 @@ export default new Vuex.Store({
 			throw error
 		}
 	},
-
 	async uploadImages({commit}, {url}){
 		/**
 		 * This function uploads user's photos to s3 storage and it returns url
 		 */
 	},
-	
 	async loginUser({commit}, {email, password}){
 		/**
 		 * 
@@ -187,6 +184,12 @@ export default new Vuex.Store({
 	},
 	async logoutUser({commit}){
 		console.log(this.state.user.uid)
+		var timestamp = firebase.firestore.FieldValue.serverTimestamp()
+		const isOfflineForDatabase = {
+			state: 'offline',
+			last_changed: timestamp,
+		}
+		firebase.database().ref('/status' + this.state.user._id).set(isOfflineForDatabase)
 		await firebase.firestore().collection('users').doc(this.state.user._id).update({
 			online: false,
 			lastChanged: firebase.firestore.FieldValue.serverTimestamp()

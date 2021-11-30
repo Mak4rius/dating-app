@@ -387,7 +387,7 @@ export default {
 				user)
 				.then(() => {
 					console.log('REGISTER!')
-					this.$router.push('/')
+					this.$router.push('/search')
 				})
 				.catch(err => {
 					console.log(err)

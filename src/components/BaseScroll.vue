@@ -124,8 +124,6 @@
 			this.lastUser = null 
 			this.userList = []
 			
-			console.log(telegram)
-			console.log(whatsup)
 			if(telegram && whatsup){
 				this.option = 1
 				console.log('social networks')
@@ -140,16 +138,16 @@
 				this.option = 3
 				console.log('whatsup')
 				this.sortingWhatsupOnSearch(sex, city, lowerBound, upperBound, online)
-			}else{
-				if(online){
+			}
+			else if(online){
 					console.log('no social networks, but online')
 					this.option = 4
-					this.sortingOnlineOnSearch(sex, city, lowerBound, upperBound)				
-				}else{
+					this.sortingOnlineOnSearch(sex, city, lowerBound, upperBound)
+			}
+			else{
 					console.log('no social networks, but offline')
 					this.option = 0
 					this.sortingOnSearch(sex, city, lowerBound, upperBound)
-				}
 			}
 		})
 	},
@@ -169,21 +167,22 @@
 
 					case 1:
 						// sortingSocialNetworksOnSearch
+						console.log('social networks')
 						this.sortingSocialNetworksOnScroll()
 
 					case 2:
 						// sortingTelegramOnSearch
+						console.log('telegram network')
 						this.sortingTelegramOnScroll()
 
 					case 3:
 						//sortingWhastupOnSearch
+						console.log('whatsup')
 						this.sortingWhatsupOnScroll()
 					case 4:
 						// sortin OnlineOnSearch
+						console.log('no social networks, but online')
 						this.sortingOnlineOnScroll()
-
-					default:
-						this.searchOnScroll()
 				}
 			}
     	},
@@ -1453,7 +1452,7 @@
 					.where('city','==',this.city)
 					.where('age','>=',this.lowerBound)
 					.where('age','<=',this.upperBound)
-					.where('online','==',this.online)
+					.where('online','==', true)
 					.limit(this.userLimit)
 					.orderBy('age', 'asc')
 					.startAfter(this.lastUser)
@@ -1492,7 +1491,7 @@
 					.where('sex','==', sexOption)
 					.where('age','>=',this.lowerBound)
 					.where('age','<=',this.upperBound)
-					.where('online','==',this.online)
+					.where('online','==',true)
 					.limit(this.userLimit)
 					.orderBy('age', 'asc')
 					.startAfter(this.lastUser)

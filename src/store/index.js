@@ -93,6 +93,8 @@ export default new Vuex.Store({
 			lastChanged: timestamp
 		})	
 
+		const create_status = await firebase.database().ref("/status" + unique_user._id)
+
 		commit('setUser', new User(
 			unique_user._id, 
 			unique_user.username,

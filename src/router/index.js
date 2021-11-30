@@ -22,7 +22,7 @@ const routes = [
     component: Chats,
 	beforeEnter(to,from,next){
 		// if checkUser is true, then next(), if false then next('/login')
-		store.getters.checkUser === null ? next() : next('/login') 
+		store.getters.checkUser ? next() : next('/login') 
 	}
   },
   {
@@ -31,7 +31,7 @@ const routes = [
     component: Profile,
 	beforeEnter(to,from,next){
 		// if checkUser is true, then next(), if false then next('/login')
-		store.getters.checkUser === null ? next() : next('/login') 
+		store.getters.checkUser ? next() : next('/login') 
 	}
   },
   {

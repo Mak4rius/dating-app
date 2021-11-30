@@ -130,7 +130,16 @@
 			x-large
             @click="changeUserDetails"
           >
-            Сохранить 
+			<div v-if="loading">
+			<v-progress-circular	
+				:size="35"
+				color="primary"
+				indeterminate
+			></v-progress-circular>
+			</div>
+			<div v-else>	
+				Сохранить изменения										    
+			</div>
           </v-btn>
 		  </v-col>
 		</v-row>
@@ -156,6 +165,7 @@ import firebase from "firebase"
 	methods: {
 		changeUserDetails(){
 			if(this.$refs.changeUser.validate()){
+				this.loading = true
 				this.$store.state.user.username = this.username
 				this.$store.state.user.age = this.age
 				this.$store.state.user.city = this.city
@@ -176,11 +186,13 @@ import firebase from "firebase"
 					// The document probably doesn't exist.
 					console.error("Произошла ошибка: ", error)
 				})
+				this.loading = false
 				this.dialog = false
 			}
 		}
 	},
     data: () => ({
+	  loading: false,
       dialog: false,
 	  username: "",
 	  age: "",

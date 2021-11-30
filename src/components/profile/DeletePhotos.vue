@@ -17,7 +17,16 @@
           v-bind="attrs"
           v-on="on"
         >
-		Удалить фото
+		<div v-if="loading">	
+		<v-progress-circular	
+		:size="35"
+		color="primary"
+		indeterminate
+		></v-progress-circular>
+		</div>
+		<div v-else>	
+			Удалить фото									    
+		</div>
         </v-btn>
       </template>
       <v-card>
@@ -76,6 +85,7 @@ import firebase from "firebase"
 export default {
 	 data () {
       return {
+		loading: false,
 		photos:[],
         dialog: false,
       }
@@ -88,11 +98,15 @@ export default {
     },
 	methods: {
 	  deleteImage(){
+		  this.loading = true
 		  let removed_image = this.$store.state.user.photos[this.carouselIndex]
-		  this.$store.state.user.photos.splice(this.carouselIndex, this.carouselIndex)
-		  firebase.firestore().collection('users').doc(this.$store.state.user._id).update({
-			  photos: firebase.firestore.FieldValue.arrayRemove(removed_image)
-		  })
+		  if(this.$store.state.user.photos.length != 0){
+			this.$store.state.user.photos.splice(this.carouselIndex, this.carouselIndex)
+			firebase.firestore().collection('users').doc(this.$store.state.user._id).update({
+				photos: firebase.firestore.FieldValue.arrayRemove(removed_image)
+			})
+		  }
+		  this.loading = false
 	  },
 	  savePhotos(){
 		  this.dialog = false

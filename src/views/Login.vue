@@ -56,8 +56,16 @@
                                         </v-col>
                                         <v-col cols="12">
                                             <v-btn x-large block :disabled="!valid" color="indigo darken-4 text--white" class="ma-2 white--text" @click="login">
-												<div v-if="loading">Loading</div>
-												<div v-else>Залогиниться</div>
+												<div v-if="loading">
+													<v-progress-circular	
+														:size="35"
+														color="primary"
+														indeterminate
+													></v-progress-circular>
+												</div>
+												<div v-else>	
+													Залогиниться										    
+												</div>
 											</v-btn>
                                         </v-col>
                                     </v-row>
@@ -148,10 +156,36 @@
                                             <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" required :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Пароль" hint="Минимум 8 символов" @click:append="show1 = !show1"></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
+											<template>
+											<Motion
+												:auto="[
+													'scale-0 opacity-0',
+													'scale-100 opacity-100'
+												]"
+												:options="{
+													repeat: true,
+													duration: 500,
+													factor: 4,
+													skip: 1,
+													instantRollback: true,
+												}"
+												class="h-6 w-6 bg-indigo-600 rounded-full"
+											/>
+												
                                             <v-btn x-large block :disabled="!valid" color="indigo darken-4" class="white--text"  @click="register">
-												<div v-if="loading">Loading</div>
-												<div v-else>Зарегестрироваться</div>
+												<div v-if="loading">
+													<v-progress-circular	
+														:size="35"
+														color="primary"
+														indeterminate
+													></v-progress-circular>
+												</div>
+												<div v-else>	
+													Зарегистрироваться										    
+												</div>
 												</v-btn>
+
+											</template>
                                         </v-col>
 										<v-col cols="12">
 											<v-divider></v-divider>
@@ -166,12 +200,26 @@
 </template>
 
 <script>
+import Motion from 'tinymotion'
 
 export default {
   name: 'Login',
+  components:{
+	Motion
+  },
   data: () => ({
 	dialog: false,
 	radios: null,
+	trigger: true,
+	repeat: true,           // infinite animation until stopped
+	rollback: true,         // reverse animation until return to the first keyframe
+	instantRollback: true,  // instantly return to the first keyframe
+	delay: 0,               // delay before the start
+	stepDelay: 0,           // delay between keyframes
+	factor: 1,              // delay factor (number of steps to skip) before every step
+	skip: 0,                // number of steps to skip before the first flip
+	duration: 600,          // default duration. might be overridden by duration-{value} Tailwind class
+	ease: 'ease-in-out',    // transition timing function
     tab: 0,
     tabs: [
         {name:"Логин", icon:"mdi-account"},

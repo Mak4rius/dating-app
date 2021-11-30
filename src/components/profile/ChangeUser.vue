@@ -28,7 +28,7 @@
           <v-container>
             <v-row>
               <v-col cols="6" >
-			  <v-text-field v-model="username" :rules="[rules.required]" label="Имя" maxlength="20" required></v-text-field>
+			  <v-text-field v-model="username" ref="changeUser" :rules="userRules" label="Имя" maxlength="20" required></v-text-field>
 			  </v-col>
 			  <v-radio-group
 					v-model="radios"
@@ -155,27 +155,29 @@ import firebase from "firebase"
 	},
 	methods: {
 		changeUserDetails(){
-			this.$store.state.user.username = this.username
-			this.$store.state.user.age = this.age
-			this.$store.state.user.city = this.city
-			this.$store.state.user.height = this.height
-			this.$store.state.user.weight = this.weight
-			this.$store.state.user.sex = this.radios
-			firebase.firestore().collection('users').doc(this.$store.state.user._id)
-			.update({username: this.username,
-					 age: this.age, 
-					 city: this.city, 
-					 height: this.height,
-					 weight: this.weight, 
-					 sex: this.radios
-			}).then(() => {
-				console.log("Данные пользователя обновились!")
-			})
-			.catch((error) => {
-				// The document probably doesn't exist.
-				console.error("Произошла ошибка: ", error)
-			})
-			this.dialog = false
+			if(this.$refs.changeUser.validate()){
+				this.$store.state.user.username = this.username
+				this.$store.state.user.age = this.age
+				this.$store.state.user.city = this.city
+				this.$store.state.user.height = this.height
+				this.$store.state.user.weight = this.weight
+				this.$store.state.user.sex = this.radios
+				firebase.firestore().collection('users').doc(this.$store.state.user._id)
+				.update({username: this.username,
+						age: this.age, 
+						city: this.city, 
+						height: this.height,
+						weight: this.weight, 
+						sex: this.radios
+				}).then(() => {
+					console.log("Данные пользователя обновились!")
+				})
+				.catch((error) => {
+					// The document probably doesn't exist.
+					console.error("Произошла ошибка: ", error)
+				})
+				this.dialog = false
+			}
 		}
 	},
     data: () => ({
@@ -187,6 +189,10 @@ import firebase from "firebase"
 	  weight: "",
 	  radios: "",
 	  show1: false,
+	  userRules: [
+      v => !!v || "Обязательно",
+	  v => /^[а-яА-Я_-]{3,15}$/.test(v) || "имя на русском"
+	  ],
       rules: {
       required: value => !!value || "Required.",
       min: v => (v && v.length >= 8) || "Min 8 characters"

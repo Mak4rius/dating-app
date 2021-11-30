@@ -32,8 +32,8 @@
           avatar="../assets/logo.svg"
         >
 			<UserCard
-			:id="this.$store.state.user.id"
-			:name="this.$store.state.user.name"
+			:_id="this.$store.state.user._id"
+			:username="this.$store.state.user.username"
 			:city="this.$store.state.user.city"
 			:age="this.$store.state.user.age"
 			:sex="this.$store.state.user.sex"

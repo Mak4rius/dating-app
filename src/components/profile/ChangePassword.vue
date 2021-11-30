@@ -27,7 +27,7 @@
 		<v-card-text>
 		<v-form  v-model="valid">
 		<v-col cols="12">
-			<v-text-field v-model="password" required :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Пароль" hint="Минимум 8 символов" counter @click:append="show1 = !show1"></v-text-field>
+			<v-text-field v-model="password" required :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Пароль" hint="Минимум 8 символов"  @click:append="show1 = !show1"></v-text-field>
 		</v-col>
 		</v-form>
 		</v-card-text>

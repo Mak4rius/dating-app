@@ -3,7 +3,7 @@
     <v-card-title class="text-center justify-center py-6">
 	      <p class="text-h2" text-color="white">
         	<vue-typer
-			:text='[" Les Courtisans "]'
+			:text='[" Dating "]'
 			:repeat='0'
 			:shuffle='false'
 			initial-action='typing'
@@ -16,12 +16,6 @@
 			caret-animation='smooth'
 			></vue-typer>
       </p>
-	<v-img
-  max-height="100"
-  max-width="100"
-  class="mb-4 ml-4"
-  src="../assets/mac1024.png"
-></v-img>
     </v-card-title>
     <v-tabs
       v-model="tab"

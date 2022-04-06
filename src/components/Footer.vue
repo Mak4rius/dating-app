@@ -9,11 +9,12 @@
         cols="12"
       >
 	        <div class="body-1 white--text pt-6 pt-md-0 text-center">
-            &copy; 2021, сделано с
-            <v-icon size="18">
+            &copy; 2021, сделано 
+            <a href="https://github.com/Mak4rius">m4k4rich</a>
+			c
+			<v-icon size="18">
               mdi-heart
             </v-icon>
-            <a href="https://www.creative-tim.com">Creative Tim</a> для лучших знакомств :).
           </div>
         </v-col>
     </v-row>

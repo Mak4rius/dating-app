@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "firebase": "^8.9.0",
     "moment": "^2.29.1",
+    "tinymotion": "^0.2.0",
     "vue": "^2.6.11",
     "vue-advanced-chat": "^1.0.0",
     "vue-beautiful-chat": "^2.5.0",

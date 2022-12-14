@@ -1,9 +1,10 @@
 # generic-dating-app
 
-This web-app is written in Vue.js, using Vuex as a state management library and Firebase as the database. 
-In this web-app user can create and edit his profile.
-He can also look for other profiles filtering them on the basis of some criteria. 
-There is also messaging app implemented inside.  
+###This web-app is written in Vue.js, using Vuex as a state management library and Firebase as the database. 
+###This web-app allows a user to perform following actions:
+1) Create and edit profile
+2) Search for other people based on the desired criteria, such as age and etc.
+3) Message other people, the messaging is implemented using firebase.
 
 ## Project setup
 ```
